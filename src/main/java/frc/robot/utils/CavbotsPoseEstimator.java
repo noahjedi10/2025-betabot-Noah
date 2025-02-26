@@ -4,6 +4,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveSubsystemConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -11,8 +12,8 @@ public class CavbotsPoseEstimator {
     private SwerveDrivePoseEstimator estimator;
 
     CavbotsPhotonCamera[] localizationCameras = {
-        // new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_ONE_NAME, CameraConstants.LOCALIZATION_CAM_ONE_OFFSET),
-        // new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_TWO_NAME, CameraConstants.LOCALIZATION_CAM_TWO_OFFSET)
+        new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_ONE_NAME, CameraConstants.LOCALIZATION_CAM_ONE_OFFSET),
+        new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_TWO_NAME, CameraConstants.LOCALIZATION_CAM_TWO_OFFSET)
     };
 
     public CavbotsPoseEstimator(DriveSubsystem driveSubsystem, Pose2d initialPose2d) {
