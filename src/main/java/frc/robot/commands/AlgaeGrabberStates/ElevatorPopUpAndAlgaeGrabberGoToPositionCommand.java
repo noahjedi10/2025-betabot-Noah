@@ -10,15 +10,17 @@ import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ElevatorPopUpAndAlgaeGrabberRetractCommand extends Command {
+public class ElevatorPopUpAndAlgaeGrabberGoToPositionCommand extends Command {
   AlgaeGrabberSubsystem algaeGrabberSubsystem;
   ElevatorSubsystem elevatorSubsystem;
 
-  double homePosition = AlgaeGrabberSubsystemConstants.MINIMUM_SAFE_ELEVATOR_ENCODER_POSITION;;
+  double homePosition = AlgaeGrabberSubsystemConstants.MINIMUM_SAFE_ELEVATOR_ENCODER_POSITION;
+  double algaeGrabberEncoderPosition;
 
-  public ElevatorPopUpAndAlgaeGrabberRetractCommand(AlgaeGrabberSubsystem algaeGrabberSubsystem, ElevatorSubsystem elevatorSubsystem) {
+  public ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(AlgaeGrabberSubsystem algaeGrabberSubsystem, ElevatorSubsystem elevatorSubsystem, double algaeGrabberEncoderPosition) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.algaeGrabberSubsystem = algaeGrabberSubsystem;
+    this.algaeGrabberEncoderPosition = algaeGrabberEncoderPosition;
     addRequirements(elevatorSubsystem, algaeGrabberSubsystem);
   }
 
@@ -33,10 +35,12 @@ public class ElevatorPopUpAndAlgaeGrabberRetractCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("popping up");
+    System.out.println("Setting elevator for pop up");
     elevatorSubsystem.setPosition(homePosition);
     if(elevatorSubsystem.isElevatorPIDAtSetpoint()) {
-      algaeGrabberSubsystem.setPosition(AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
+      algaeGrabberSubsystem.setPosition(algaeGrabberEncoderPosition);
+    } else {
+      algaeGrabberSubsystem.setPivotMotor(0.0);
     }
   }
 

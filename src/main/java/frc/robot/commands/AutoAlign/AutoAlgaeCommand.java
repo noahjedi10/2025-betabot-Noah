@@ -4,6 +4,8 @@
 
 package frc.robot.commands.AutoAlign;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -16,11 +18,13 @@ public class AutoAlgaeCommand extends Command {
   DriveSubsystem driveSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   AlgaeGrabberSubsystem algaeGrabberSubsystem;
+  BooleanSupplier ejectAfterIntakingBooleanSupplier;
 
-  public AutoAlgaeCommand(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem) {
+  public AutoAlgaeCommand(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, BooleanSupplier ejectAfterIntakingBooleanSupplier) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.algaeGrabberSubsystem = algaeGrabberSubsystem;
+    this.ejectAfterIntakingBooleanSupplier = ejectAfterIntakingBooleanSupplier;
 
     addRequirements(driveSubsystem, algaeGrabberSubsystem, elevatorSubsystem);
   }
@@ -43,7 +47,8 @@ public class AutoAlgaeCommand extends Command {
       elevatorSubsystem,
       algaeGrabberSubsystem,
       driveSubsystem,
-      PathLoader.getShouldFlipPath()
+      PathLoader.getShouldFlipPath(),
+      ejectAfterIntakingBooleanSupplier.getAsBoolean()
     );
     algaeIntakeCommand.schedule();
   }

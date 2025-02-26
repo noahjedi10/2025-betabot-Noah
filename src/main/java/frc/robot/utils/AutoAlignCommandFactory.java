@@ -18,6 +18,8 @@ import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.PathingConstants;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
+import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
+import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
 import frc.robot.commands.AutoAlign.FollowPrecisePathAndRaiseElevatorAndScoreCommand;
 import frc.robot.commands.AutoAlign.FollowPrecisePathCommand;
 import frc.robot.commands.ElevatorStates.ElevatorGoToPositionAndEndCommand;
@@ -192,14 +194,20 @@ public class AutoAlignCommandFactory {
         return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose, grabberSpeed);
     }
 
-    public static Command getAutoAlignAndAlgaeIntakeParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance) {
+    public static Command getAutoAlignAndAlgaeIntakeParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, boolean ejectAfterIntaking) {
         initalize();
         Pose2d goalPose = getClosestAlgaeIntakePose(currentPosition, onRedAlliance);
         double elevatorEncoderPosition = getAlgaeElevatorEncoderPosition(goalPose, onRedAlliance);
 
-        return new ParallelCommandGroup(
+        Command driveAndIntake = new ParallelCommandGroup(
             getAutoAlignDriveCommandAlgae(driveSubsystem, currentPosition, goalPose, onRedAlliance),
-            new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, elevatorEncoderPosition, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION)
+            new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, elevatorEncoderPosition, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION) 
         );
+
+        if(ejectAfterIntaking) {
+            return driveAndIntake.andThen(new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
+        }
+
+        return driveAndIntake.andThen(new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
     }
 }

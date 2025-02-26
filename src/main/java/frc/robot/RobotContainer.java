@@ -9,7 +9,9 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -17,7 +19,7 @@ import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
-import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberRetractCommand;
+import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberGoToPositionCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
@@ -27,6 +29,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class RobotContainer {
   XboxController driver = new XboxController(0);
+  XboxController operator = new XboxController(1);
 
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
@@ -36,11 +39,12 @@ public class RobotContainer {
   Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
 
   Command homeElevatorAndDontBreakAlgaeGrabber = new SequentialCommandGroup(
-    new ElevatorPopUpAndAlgaeGrabberRetractCommand(algaeGrabberSubsystem, elevatorSubsystem),
+    new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION),
     new ElevatorReturnToHomeAndZeroCommand(elevatorSubsystem)
   );
 
   boolean scoringOnLeft = true;
+  boolean ejectAlgae = false;
 
   public RobotContainer() {
     configureDefaultBindings();
@@ -52,6 +56,7 @@ public class RobotContainer {
     configureElevatorBindings();
     configureAlgaeGrabberBindings();
     configureSideSelectorBindings();
+    configureAlgaeEjectOrRetainBindings();
   }
 
   private void configureDefaultBindings() {
@@ -80,7 +85,7 @@ public class RobotContainer {
 
   private void configureAlgaeGrabberBindings() {
     JoystickButton intakeAlgae = new JoystickButton(driver, 1);
-    intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem));
+    intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, this::getEjectAlgae));
   }
 
   private void configureSideSelectorBindings() {
@@ -94,8 +99,27 @@ public class RobotContainer {
     rightSelector.onTrue(new InstantCommand(() -> {scoringOnLeft = false;}));
   }
 
+  private void configureAlgaeEjectOrRetainBindings() {
+    JoystickButton ejectAlgaeButton = new JoystickButton(operator, 2);
+    JoystickButton retainAlgaeButton = new JoystickButton(operator, 3);
+
+    ejectAlgaeButton.onTrue(new InstantCommand(() -> {
+      ejectAlgae = true;
+      System.out.println(ejectAlgae);
+    }));
+
+    retainAlgaeButton.onTrue(new InstantCommand(() -> {
+      ejectAlgae = false;
+      System.out.println(ejectAlgae);
+    }));
+  }
+
   public boolean getScoringOnLeft() {
     return scoringOnLeft;
+  }
+
+  public boolean getEjectAlgae() {
+    return ejectAlgae;
   }
 
   public Command getAutonomousCommand() {

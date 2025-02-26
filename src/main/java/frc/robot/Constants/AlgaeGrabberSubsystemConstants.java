@@ -14,8 +14,11 @@ public class AlgaeGrabberSubsystemConstants {
     public static final double ALGAE_REMOVAL_ENCODER_POSITION = 0.0;
     public static final double PROCESSOR_SCORING_ENCODER_POSITION = 0.0;
     public static final double RETRACTED_ENCODER_POSITION = 0.0;
+    public static final double EJECT_ENCODER_POSITION = 0.0;
 
     public static final double MINIMUM_SAFE_ELEVATOR_ENCODER_POSITION = 0.0; //Sometimes mechanical's methods are a delightful gift to programming.
 
     public static final double INTAKE_MOTOR_SPEED = 1.0;
+
+    public static final double INTAKE_CURRENT_DRAW = 0.0;
 }
