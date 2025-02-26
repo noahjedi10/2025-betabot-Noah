@@ -34,6 +34,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     spinMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     controller.enableContinuousInput(0, 1); //Obviously, this will be an issue. That damn thru bore and its inability to count past one rotation.
+    controller.setTolerance(.05);
   }
 
   public void setSpinMotor(double percent) {

@@ -10,13 +10,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.commands.FieldDriveCommand;
+import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
+import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberRetractCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
-import frc.robot.commands.ElevatorStates.ElevatorRetractCommand;
+import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -29,6 +33,12 @@ public class RobotContainer {
   AlgaeGrabberSubsystem algaeGrabberSubsystem = new AlgaeGrabberSubsystem();
 
   Command defaultDriveCommand = new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX);
+  Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
+
+  Command homeElevatorAndDontBreakAlgaeGrabber = new SequentialCommandGroup(
+    new ElevatorPopUpAndAlgaeGrabberRetractCommand(algaeGrabberSubsystem, elevatorSubsystem),
+    new ElevatorReturnToHomeAndZeroCommand(elevatorSubsystem)
+  );
 
   boolean scoringOnLeft = true;
 
@@ -65,7 +75,7 @@ public class RobotContainer {
     l3Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
     l4Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
 
-    scoreCancel.onTrue(new ElevatorRetractCommand(elevatorSubsystem));
+    scoreCancel.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
   }
 
   private void configureAlgaeGrabberBindings() {
