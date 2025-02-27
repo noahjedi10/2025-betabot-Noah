@@ -33,6 +33,7 @@ public class AutoAlgaeCommand extends Command {
   @Override
   public void initialize() {
     System.out.println("Running auto algae intake");
+    System.out.println(ejectAfterIntakingBooleanSupplier.getAsBoolean());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

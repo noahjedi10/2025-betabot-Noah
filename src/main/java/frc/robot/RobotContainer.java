@@ -105,12 +105,10 @@ public class RobotContainer {
 
     ejectAlgaeButton.onTrue(new InstantCommand(() -> {
       ejectAlgae = true;
-      System.out.println(ejectAlgae);
     }));
 
     retainAlgaeButton.onTrue(new InstantCommand(() -> {
       ejectAlgae = false;
-      System.out.println(ejectAlgae);
     }));
   }
 
