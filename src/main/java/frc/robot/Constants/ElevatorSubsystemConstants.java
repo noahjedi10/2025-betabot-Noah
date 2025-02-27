@@ -10,11 +10,11 @@ import java.util.List;
 /** Add your docs here. */
 public class ElevatorSubsystemConstants 
 {
-    public static final int LEFT_MOTOR_ID = 49;
-    public static final int RIGHT_MOTOR_ID = 48;
-    public static final int GRABBER_MOTOR_ID = 47;
+    public static final int LEFT_MOTOR_ID = 50;
+    public static final int RIGHT_MOTOR_ID = 51;
+    public static final int GRABBER_MOTOR_ID = 58;
 
-    public static final int CORAL_SENSOR_PROXIMITY_THRESHOLD = 200;
+    public static final int CORAL_SENSOR_PROXIMITY_THRESHOLD = 800;
 
     public static final int NEO550_CURRENT_LIMIT = 30;
 

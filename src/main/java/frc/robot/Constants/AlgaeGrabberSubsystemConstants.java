@@ -6,8 +6,8 @@ package frc.robot.Constants;
 
 /** Add your docs here. */
 public class AlgaeGrabberSubsystemConstants {
-    public static final int PIVOT_MOTOR_ID = 46;
-    public static final int SPIN_MOTOR_ID = 45;
+    public static final int PIVOT_MOTOR_ID = 41;
+    public static final int SPIN_MOTOR_ID = 40;
 
     public static final int THRU_BORE_ENCODER_ID = 0; 
 
