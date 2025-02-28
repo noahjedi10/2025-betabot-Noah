@@ -8,6 +8,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveSubsystemConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
+@SuppressWarnings("unused")
 public class CavbotsPoseEstimator {
     private SwerveDrivePoseEstimator estimator;
 
