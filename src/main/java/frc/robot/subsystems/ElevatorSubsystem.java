@@ -46,6 +46,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     smc.follow(primary, false);
     smc.voltageCompensation(RobotConstants.NOMINAL_VOLTAGE);
     smc.idleMode(IdleMode.kBrake);
+    smc.smartCurrentLimit(80);
     secondary.configure(smc, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     SparkMaxConfig neoConfig = new SparkMaxConfig();
@@ -60,6 +61,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     primaryConfig.voltageCompensation(RobotConstants.NOMINAL_VOLTAGE);
 
     primaryConfig.closedLoop.pid(0.8, 0.0, 0.0);
+    primaryConfig.smartCurrentLimit(80);
     primaryConfig.closedLoop.maxMotion
       .maxAcceleration(ElevatorSubsystemConstants.MAX_ACCELERATION)
       .maxVelocity(ElevatorSubsystemConstants.MAX_VELOCITY)
@@ -87,7 +89,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setPosition(double position) {
     currentSetpoint = position;
-    onboardClosedLoop.setReference(-position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, -0.65, ArbFFUnits.kVoltage);
+    onboardClosedLoop.setReference(-position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, -ElevatorSubsystemConstants.ARBITRARY_FEEDFORWARD, ArbFFUnits.kVoltage);
   }
 
   public void zeroEncoder() {
