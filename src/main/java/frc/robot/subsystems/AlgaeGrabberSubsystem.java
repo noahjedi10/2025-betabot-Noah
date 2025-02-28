@@ -46,7 +46,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   }
 
   public void setPosition(double position) {
-    double speed = controller.calculate(position, getPosition());
+    double speed = controller.calculate(getPosition(), position);
     setPivotMotor(speed);
   }
 
