@@ -19,6 +19,7 @@ import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
 import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberGoToPositionCommand;
+import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeManualEndCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
@@ -27,7 +28,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.commands.ElevatorStates.ElevatorRetractCommand;
 import frc.robot.commands.ElevatorStates.ElevatorHPIntakeCommand;
-import frc.robot.commands.ElevatorStates.RetractCoralAfterIntakingCommand;
 import frc.robot.commands.ElevatorStates.ElevatorGoToPositionCommand;
 import frc.robot.commands.SlowFieldDriveCommand;
 
@@ -61,7 +61,7 @@ public class RobotContainer {
   private void configureBindings() {
     configureDriveBindings();
     configureElevatorBindings();
-    // configureAlgaeGrabberBindings();
+    configureAlgaeGrabberBindings();
     // configureSideSelectorBindings();
     // configureAlgaeEjectOrRetainBindings();
   }
@@ -116,6 +116,14 @@ public class RobotContainer {
   }
 
   private void configureAlgaeGrabberBindings() {
+    POVButton highAlgae = new POVButton(operator, 0);
+    POVButton lowAlgae = new POVButton(operator, 90);
+    POVButton cancelAlgaeGrab = new POVButton(operator, 180);
+
+    highAlgae.onTrue(new AlgaeGrabberAndElevatorPositionAndIntakeManualEndCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION));
+    lowAlgae.onTrue(new AlgaeGrabberAndElevatorPositionAndIntakeManualEndCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.LOW_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION));
+    cancelAlgaeGrab.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
+
     JoystickButton intakeAlgae = new JoystickButton(driver, 1);
     intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, this::getEjectAlgae));
   }
