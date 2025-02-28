@@ -23,23 +23,23 @@ public class ElevatorSubsystemConstants
     public static final double L3_ENCODER_POSITION = 0.0;
     public static final double L4_ENCODER_POSITION = 0.0;
 
-    public static final double HP_ENCODER_POSITION = 0.0;
-    public static final double DEFAULT_POSITION = 0.0; //So the carriage doesn't slam into the base.
+    public static final double HP_ENCODER_POSITION = 1.5;
+    public static final double DEFAULT_POSITION = 1.5; //So the carriage doesn't slam into the base.
 
     public static final double HIGH_ALGAE_POSITION = 0.0;
     public static final double LOW_ALGAE_POSITION = 0.0;
 
     public static final double GRABBER_SPEED = 0.5;
     public static final double L1_GRABBER_SPEED = .15;
-    public static final double INTAKE_GRABBER_SPEED = 0.4;
+    public static final double INTAKE_GRABBER_SPEED = 0.2;
 
     public static final double HOMED_CURRENT_DRAW = 75.0;
 
-    public static final double MAX_ACCELERATION = 0;
-    public static final double MAX_VELOCITY = 0;
+    public static final double MAX_ACCELERATION = 500;
+    public static final double MAX_VELOCITY = 1000;
     public static final double AT_SETPOINT_TOLERANCE = 1.0;
 
-    public static final double ARBITRARY_FEEDFORWARD = 0.0;
+    public static final double ARBITRARY_FEEDFORWARD = 0.09;
 
     public static final List<Double> ALGAE_ELEVATOR_POSITIONS = Arrays.asList(
         

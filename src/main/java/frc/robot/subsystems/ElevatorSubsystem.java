@@ -30,7 +30,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   SparkMax secondary = new SparkMax(ElevatorSubsystemConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   SparkMax spinGrabber = new SparkMax(ElevatorSubsystemConstants.GRABBER_MOTOR_ID, MotorType.kBrushless);
   
-  ColorSensorV3 coralSensor = new ColorSensorV3(Port.kOnboard);
+  ColorSensorV3 coralSensor = new ColorSensorV3(Port.kMXP);
 
   RelativeEncoder rightEncoder = primary.getEncoder();
 
@@ -45,6 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SparkMaxConfig smc = new SparkMaxConfig();
     smc.follow(primary, false);
     smc.voltageCompensation(RobotConstants.NOMINAL_VOLTAGE);
+    smc.idleMode(IdleMode.kBrake);
     secondary.configure(smc, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     SparkMaxConfig neoConfig = new SparkMaxConfig();
@@ -58,11 +59,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     primaryConfig.encoder.positionConversionFactor(1.0);
     primaryConfig.voltageCompensation(RobotConstants.NOMINAL_VOLTAGE);
 
-    primaryConfig.closedLoop.pid(0.0, 0.0, 0.0);
+    primaryConfig.closedLoop.pid(0.8, 0.0, 0.0);
     primaryConfig.closedLoop.maxMotion
       .maxAcceleration(ElevatorSubsystemConstants.MAX_ACCELERATION)
       .maxVelocity(ElevatorSubsystemConstants.MAX_VELOCITY)
       .allowedClosedLoopError(0.5);
+    primaryConfig.idleMode(IdleMode.kBrake);
     primary.configure(primaryConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     rightEncoder.setPosition(0.0);
@@ -70,7 +72,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setSpin(double percent)
   {
-    primary.set(percent);
+    primary.set(-percent);
   }
 
   public void setGrabber(double percent)
@@ -80,12 +82,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public double getPosition()
   {
-    return rightEncoder.getPosition();
+    return -rightEncoder.getPosition();
   }
 
   public void setPosition(double position) {
     currentSetpoint = position;
-    onboardClosedLoop.setReference(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorSubsystemConstants.ARBITRARY_FEEDFORWARD, ArbFFUnits.kPercentOut);
+    onboardClosedLoop.setReference(-position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, -0.65, ArbFFUnits.kVoltage);
   }
 
   public void zeroEncoder() {
