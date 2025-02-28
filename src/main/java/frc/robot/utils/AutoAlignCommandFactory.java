@@ -19,7 +19,7 @@ import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.PathingConstants;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
-import frc.robot.commands.AlgaeGrabberStates.AutoAlign.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
+import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.FollowPrecisePathAndRaiseElevatorAndScoreCommand;
 import frc.robot.commands.AutoAlign.FollowPrecisePathCommand;
 import frc.robot.commands.ElevatorStates.ElevatorGoToPositionAndEndCommand;
