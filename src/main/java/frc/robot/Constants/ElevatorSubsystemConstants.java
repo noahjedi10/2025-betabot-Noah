@@ -39,7 +39,7 @@ public class ElevatorSubsystemConstants
     public static final double MAX_VELOCITY = 1000;
     public static final double AT_SETPOINT_TOLERANCE = 1.0;
 
-    public static final double ARBITRARY_FEEDFORWARD = 0.09;
+    public static final double ARBITRARY_FEEDFORWARD = 0.65;
 
     public static final List<Double> ALGAE_ELEVATOR_POSITIONS = Arrays.asList(
         
