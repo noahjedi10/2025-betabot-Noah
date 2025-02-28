@@ -68,7 +68,7 @@ public class RobotContainer {
 
   private void configureDefaultBindings() {
     driveSubsystem.setDefaultCommand(defaultDriveCommand);
-    // algaeGrabberSubsystem.setDefaultCommand(algaeGrabberDefaultCommand);
+    algaeGrabberSubsystem.setDefaultCommand(algaeGrabberDefaultCommand);
     elevatorSubsystem.setDefaultCommand(new ElevatorRetractCommand(elevatorSubsystem));
   }
 

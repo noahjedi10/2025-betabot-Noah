@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.RobotConstants;
@@ -23,7 +24,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
   DutyCycleEncoder thruBore = new DutyCycleEncoder(AlgaeGrabberSubsystemConstants.THRU_BORE_ENCODER_ID);
 
-  PIDController controller = new PIDController(0, 0, 0);
+  PIDController controller = new PIDController(1.0, 0.5, 0);
 
   public AlgaeGrabberSubsystem() {
     SparkMaxConfig config = new SparkMaxConfig();
@@ -69,6 +70,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("AlgaeGrabberEncoder", getPosition());
     // This method will be called once per scheduler run
   }
 }

@@ -19,9 +19,9 @@ public class ElevatorSubsystemConstants
     public static final int NEO550_CURRENT_LIMIT = 30;
 
     public static final double L1_ENCODER_POSITION = 0.0;
-    public static final double L2_ENCODER_POSITION = 0.0;
-    public static final double L3_ENCODER_POSITION = 0.0;
-    public static final double L4_ENCODER_POSITION = 0.0;
+    public static final double L2_ENCODER_POSITION = 10.0;
+    public static final double L3_ENCODER_POSITION = 20.0;
+    public static final double L4_ENCODER_POSITION = 54.0;
 
     public static final double HP_ENCODER_POSITION = 1.5;
     public static final double DEFAULT_POSITION = 1.5; //So the carriage doesn't slam into the base.
