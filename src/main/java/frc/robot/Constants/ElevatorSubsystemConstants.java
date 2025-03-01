@@ -20,14 +20,16 @@ public class ElevatorSubsystemConstants
 
     public static final double L1_ENCODER_POSITION = 0.0;
     public static final double L2_ENCODER_POSITION = 8.0;
-    public static final double L3_ENCODER_POSITION = 24.0;
+    public static final double L3_ENCODER_POSITION = 24.5;
     public static final double L4_ENCODER_POSITION = 52.0;
 
     public static final double HP_ENCODER_POSITION = 1.5;
     public static final double DEFAULT_POSITION = 1.5; //So the carriage doesn't slam into the base.
 
-    public static final double HIGH_ALGAE_POSITION = 12.0;
-    public static final double LOW_ALGAE_POSITION = 24.0;
+    public static final double HIGH_ALGAE_POSITION = 42.0;
+    public static final double LOW_ALGAE_POSITION = 26.0;
+    public static final double PROCESSOR_SCORE_POSITION = 7.0;
+    public static final double GROUND_INTAKE_POSITION = 6.5;
 
     public static final double GRABBER_SPEED = 0.35;
     public static final double L1_GRABBER_SPEED = .15;
@@ -35,8 +37,8 @@ public class ElevatorSubsystemConstants
 
     public static final double HOMED_CURRENT_DRAW = 50.0;
 
-    public static final double MAX_ACCELERATION = 500;
-    public static final double MAX_VELOCITY = 1000;
+    public static final double MAX_ACCELERATION = 6000;
+    public static final double MAX_VELOCITY = 15000;
     public static final double AT_SETPOINT_TOLERANCE = 1.0;
 
     public static final double ARBITRARY_FEEDFORWARD = 0.65;

@@ -10,6 +10,6 @@ public class CameraConstants {
     public static final String LOCALIZATION_CAM_ONE_NAME = "lc1";
     public static final String LOCALIZATION_CAM_TWO_NAME = "lc2";
 
-    public static final Transform3d LOCALIZATION_CAM_ONE_OFFSET = new Transform3d(new Translation3d(0.3048, 0.08255, 0.08), new Rotation3d(0, Math.toRadians(5), 0.0));
+    public static final Transform3d LOCALIZATION_CAM_ONE_OFFSET = new Transform3d(new Translation3d(-.0952, 0.2921, 0.1), new Rotation3d(0.0, 0.0, 0.0));
     public static final Transform3d LOCALIZATION_CAM_TWO_OFFSET = new Transform3d(new Translation3d(0.13335, -0.184, 0.08), new Rotation3d(0, Math.toRadians(5), 0.0));
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,6 +24,8 @@ public class DriveSubsystem extends SubsystemBase {
   Pigeon2 pigeon = new Pigeon2(DriveSubsystemConstants.PIGEON_ID, DriveSubsystemConstants.CANIVORE_NAME);
   CavbotsPoseEstimator poseEstimator;
   Rotation2d driverGyroOffset = new Rotation2d();
+
+  Field2d field = new Field2d();
 
   public DriveSubsystem() {
     fleft = new NeoKrakenModule(DriveSubsystemConstants.FLEFT_DRIVE_ID, DriveSubsystemConstants.FLEFT_STEER_ID, DriveSubsystemConstants.FLEFT_CANCODER, DriveSubsystemConstants.FLEFT_OFFSET, DriveSubsystemConstants.CANIVORE_NAME);
@@ -103,5 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("BRIGHT", bright.getEncoderPosition());
 
     poseEstimator.updateWithVisionAndOdometry(getAngle(), getModulePositions());
+    field.setRobotPose(poseEstimator.getPose2d());
+    SmartDashboard.putData("field", field);
   }
 }

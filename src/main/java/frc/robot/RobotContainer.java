@@ -90,9 +90,9 @@ public class RobotContainer {
     BooleanSupplier scoringOnLeftBooleanSupplier = this::getScoringOnLeft;
     BooleanSupplier runElevatorExtruder = () -> driver.getRightTriggerAxis() > .25;
 
-    // l2Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
-    // l3Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
-    // l4Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
+    l2Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
+    l3Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
+    l4Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
 
     ParallelCommandGroup l2CommandManual = new ParallelCommandGroup(
       new ElevatorGoToPositionCommand(elevatorSubsystem, runElevatorExtruder, ElevatorSubsystemConstants.L2_ENCODER_POSITION),
@@ -109,9 +109,9 @@ public class RobotContainer {
       new SlowFieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX)
     );
 
-    l2Score.onTrue(l2CommandManual);
-    l3Score.onTrue(l3CommandManual);
-    l4Score.onTrue(l4CommandManual);
+    // l2Score.onTrue(l2CommandManual);
+    // l3Score.onTrue(l3CommandManual);
+    // l4Score.onTrue(l4CommandManual);
 
     scoreCancel.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
 
@@ -137,7 +137,8 @@ public class RobotContainer {
         new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem),
         ejectAlgaeBooleanSupplier
         )
-    ));
+      ).alongWith(new SlowFieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX))
+    );
 
     lowAlgae.onTrue(new SequentialCommandGroup(
       lowGrab,
@@ -146,7 +147,8 @@ public class RobotContainer {
         new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem),
         ejectAlgaeBooleanSupplier
         )
-    ));
+      ).alongWith(new SlowFieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX))
+    );
 
     cancelAlgaeGrab.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
 
@@ -154,7 +156,10 @@ public class RobotContainer {
     intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, this::getEjectAlgae));
 
     JoystickButton processorScore = new JoystickButton(operator, 6);
-    processorScore.onTrue(new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.DEFAULT_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier));
+    processorScore.onTrue(new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier));
+
+    // JoystickButton groundIntake = new JoystickButton(operator, 5);
+    // groundIntake.onTrue(new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.GROUND_INTAKE_POSITION, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION));
   }
 
   private void configureSideSelectorBindings() {
@@ -173,10 +178,12 @@ public class RobotContainer {
     JoystickButton retainAlgaeButton = new JoystickButton(operator, 3);
 
     ejectAlgaeButton.onTrue(new InstantCommand(() -> {
+      System.out.println("Ejecting");
       ejectAlgae = true;
     }));
 
     retainAlgaeButton.onTrue(new InstantCommand(() -> {
+      System.out.println("Retaining");
       ejectAlgae = false;
     }));
   }
@@ -186,7 +193,7 @@ public class RobotContainer {
   }
 
   public boolean getEjectAlgae() {
-    return !ejectAlgae;
+    return ejectAlgae;
   }
 
   public Command getAutonomousCommand() {

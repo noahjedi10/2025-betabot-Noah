@@ -25,10 +25,10 @@ public class DriveSubsystemConstants {
     public static final int BRIGHT_STEER_ID = 8;
     public static final int BRIGHT_CANCODER = 53;
 
-    public static final double FLEFT_OFFSET = -0.964873915580068 + Math.PI;
-    public static final double FRIGHT_OFFSET = -1.109068109641319 + Math.PI;
-    public static final double BLEFT_OFFSET = -0.559902987578259 + Math.PI;
-    public static final double BRIGHT_OFFSET = -2.626175108860218 + Math.PI;
+    public static final double FLEFT_OFFSET = 1.919009965644937 + Math.PI;
+    public static final double FRIGHT_OFFSET = 2.049398332615217;
+    public static final double BLEFT_OFFSET = -0.578310757032887 + Math.PI;
+    public static final double BRIGHT_OFFSET = -2.581689666011534 + Math.PI;
 
     public static final String CANIVORE_NAME = "CANIVORE";
 
