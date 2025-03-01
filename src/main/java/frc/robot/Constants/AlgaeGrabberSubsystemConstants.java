@@ -11,7 +11,7 @@ public class AlgaeGrabberSubsystemConstants {
 
     public static final int THRU_BORE_ENCODER_ID = 0;
 
-    public static final double ALGAE_REMOVAL_ENCODER_POSITION = 0.8;
+    public static final double ALGAE_REMOVAL_ENCODER_POSITION = -.2;
     public static final double PROCESSOR_SCORING_ENCODER_POSITION = 0.0;
     public static final double RETRACTED_ENCODER_POSITION = 0.3;
     public static final double EJECT_ENCODER_POSITION = 0.3;

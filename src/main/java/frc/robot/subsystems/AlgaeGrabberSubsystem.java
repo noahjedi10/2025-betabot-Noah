@@ -83,7 +83,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("AlgaeGrabberEncoder", getPosition());
+    SmartDashboard.putNumber("AlgaeGrabberEncoder", linearizeEncoderOutput(getPosition()));
     SmartDashboard.putNumber("AlgaeGrabberCurrentDraw", getSpinMotorCurrentDraw());
     // This method will be called once per scheduler run
   }
