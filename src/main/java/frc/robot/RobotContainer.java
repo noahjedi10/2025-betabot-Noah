@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,8 +19,10 @@ import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
+import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberGoToPositionCommand;
-import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeManualEndCommand;
+import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
+import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
@@ -47,7 +50,7 @@ public class RobotContainer {
 
   Command homeElevatorAndDontBreakAlgaeGrabber = new SequentialCommandGroup(
     new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION),
-    new ElevatorReturnToHomeAndZeroCommand(elevatorSubsystem)
+    new ElevatorReturnToHomeAndZeroCommand(elevatorSubsystem).raceWith(new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION))
   );
 
   boolean scoringOnLeft = true;
@@ -62,8 +65,8 @@ public class RobotContainer {
     configureDriveBindings();
     configureElevatorBindings();
     configureAlgaeGrabberBindings();
-    // configureSideSelectorBindings();
-    // configureAlgaeEjectOrRetainBindings();
+    configureSideSelectorBindings();
+    configureAlgaeEjectOrRetainBindings();
   }
 
   private void configureDefaultBindings() {
@@ -120,8 +123,29 @@ public class RobotContainer {
     POVButton lowAlgae = new POVButton(operator, 90);
     POVButton cancelAlgaeGrab = new POVButton(operator, 180);
 
-    highAlgae.onTrue(new AlgaeGrabberAndElevatorPositionAndIntakeManualEndCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION));
-    lowAlgae.onTrue(new AlgaeGrabberAndElevatorPositionAndIntakeManualEndCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.LOW_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION));
+    BooleanSupplier ejectAlgaeBooleanSupplier = this::getEjectAlgae;
+
+    Command highGrab = new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION);
+    Command lowGrab = new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.LOW_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION);
+
+    highAlgae.onTrue(new SequentialCommandGroup(
+      highGrab,
+      new ConditionalCommand(
+        new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem), 
+        new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem),
+        ejectAlgaeBooleanSupplier
+        )
+    ));
+
+    lowAlgae.onTrue(new SequentialCommandGroup(
+      lowGrab,
+      new ConditionalCommand(
+        new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem), 
+        new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem),
+        ejectAlgaeBooleanSupplier
+        )
+    ));
+
     cancelAlgaeGrab.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
 
     JoystickButton intakeAlgae = new JoystickButton(driver, 1);
@@ -157,7 +181,7 @@ public class RobotContainer {
   }
 
   public boolean getEjectAlgae() {
-    return ejectAlgae;
+    return !ejectAlgae;
   }
 
   public Command getAutonomousCommand() {

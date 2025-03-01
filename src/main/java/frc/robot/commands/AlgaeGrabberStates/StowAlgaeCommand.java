@@ -33,6 +33,7 @@ public class StowAlgaeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Stowing");
     elevatorSubsystem.setPosition(elevatorHoldPosition);
     if(elevatorSubsystem.isElevatorPIDAtSetpoint()) {
       algaeGrabberSubsystem.setPosition(AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);

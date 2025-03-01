@@ -24,7 +24,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
   DutyCycleEncoder thruBore = new DutyCycleEncoder(AlgaeGrabberSubsystemConstants.THRU_BORE_ENCODER_ID);
 
-  PIDController controller = new PIDController(1.0, 0.5, 0);
+  PIDController controller = new PIDController(1.0, 0.0, 0);
 
   public AlgaeGrabberSubsystem() {
     SparkMaxConfig config = new SparkMaxConfig();
@@ -32,14 +32,19 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     config.idleMode(IdleMode.kBrake);
 
     pivotMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    spinMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    SparkMaxConfig spinConfig = new SparkMaxConfig();
+    spinConfig.voltageCompensation(RobotConstants.NOMINAL_VOLTAGE);
+    spinConfig.idleMode(IdleMode.kBrake);
+    spinConfig.openLoopRampRate(.25);
+    spinMotor.configure(spinConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     controller.enableContinuousInput(0, 1); //Obviously, this will be an issue. That damn thru bore and its inability to count past one rotation.
-    controller.setTolerance(.05);
+    controller.setTolerance(.25);
   }
 
   public void setSpinMotor(double percent) {
-    spinMotor.set(percent);
+    spinMotor.set(-percent);
   }
 
   public void setPivotMotor(double percent) {
@@ -71,6 +76,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AlgaeGrabberEncoder", getPosition());
+    SmartDashboard.putNumber("AlgaeGrabberCurrentDraw", getSpinMotorCurrentDraw());
     // This method will be called once per scheduler run
   }
 }

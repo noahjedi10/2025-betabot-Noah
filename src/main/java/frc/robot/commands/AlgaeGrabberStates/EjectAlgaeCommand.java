@@ -33,6 +33,7 @@ public class EjectAlgaeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Ejecting");
     elevatorSubsystem.setPosition(elevatorHoldPosition);
     if(elevatorSubsystem.isElevatorPIDAtSetpoint()) {
       algaeGrabberSubsystem.setPosition(AlgaeGrabberSubsystemConstants.EJECT_ENCODER_POSITION);
@@ -41,6 +42,7 @@ public class EjectAlgaeCommand extends Command {
     }
 
     if(algaeGrabberSubsystem.isAlgaeGrabberPIDAtSetpoint()) {
+      System.out.println("Spinning");
       algaeGrabberSubsystem.setSpinMotor(-AlgaeGrabberSubsystemConstants.INTAKE_MOTOR_SPEED);
     }
   }

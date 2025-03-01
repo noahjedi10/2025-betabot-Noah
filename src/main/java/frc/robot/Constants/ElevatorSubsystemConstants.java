@@ -19,21 +19,21 @@ public class ElevatorSubsystemConstants
     public static final int NEO550_CURRENT_LIMIT = 30;
 
     public static final double L1_ENCODER_POSITION = 0.0;
-    public static final double L2_ENCODER_POSITION = 10.0;
-    public static final double L3_ENCODER_POSITION = 20.0;
-    public static final double L4_ENCODER_POSITION = 54.0;
+    public static final double L2_ENCODER_POSITION = 8.0;
+    public static final double L3_ENCODER_POSITION = 24.0;
+    public static final double L4_ENCODER_POSITION = 52.0;
 
     public static final double HP_ENCODER_POSITION = 1.5;
     public static final double DEFAULT_POSITION = 1.5; //So the carriage doesn't slam into the base.
 
-    public static final double HIGH_ALGAE_POSITION = 0.0;
-    public static final double LOW_ALGAE_POSITION = 0.0;
+    public static final double HIGH_ALGAE_POSITION = 12.0;
+    public static final double LOW_ALGAE_POSITION = 24.0;
 
-    public static final double GRABBER_SPEED = 0.5;
+    public static final double GRABBER_SPEED = 0.35;
     public static final double L1_GRABBER_SPEED = .15;
     public static final double INTAKE_GRABBER_SPEED = 0.2;
 
-    public static final double HOMED_CURRENT_DRAW = 75.0;
+    public static final double HOMED_CURRENT_DRAW = 50.0;
 
     public static final double MAX_ACCELERATION = 500;
     public static final double MAX_VELOCITY = 1000;
