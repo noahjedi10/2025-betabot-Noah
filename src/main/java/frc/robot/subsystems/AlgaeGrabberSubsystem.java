@@ -22,7 +22,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   SparkMax pivotMotor = new SparkMax(AlgaeGrabberSubsystemConstants.PIVOT_MOTOR_ID, MotorType.kBrushless);
   SparkMax spinMotor = new SparkMax(AlgaeGrabberSubsystemConstants.SPIN_MOTOR_ID, MotorType.kBrushless);
 
-  DutyCycleEncoder thruBore = new DutyCycleEncoder(AlgaeGrabberSubsystemConstants.THRU_BORE_ENCODER_ID);
+  DutyCycleEncoder thruBore = new DutyCycleEncoder(AlgaeGrabberSubsystemConstants.THRU_BORE_ENCODER_ID, 1, 0);
 
   PIDController controller = new PIDController(1.0, 0.0, 0);
 
@@ -51,10 +51,19 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     pivotMotor.set(percent);
   }
 
+  private double linearizeEncoderOutput(double currentPosition) { //This is stupid.
+    if(currentPosition > .4) {
+      return currentPosition - 1;
+    }
+    return currentPosition;
+  }
+
   public void setPosition(double position) {
-    double speed = controller.calculate(getPosition(), position);
+    double currentPosition = linearizeEncoderOutput(getPosition());
+    double speed = controller.calculate(currentPosition, position);
     setPivotMotor(speed);
   }
+
 
   public void stopAll() {
     spinMotor.set(0.0);

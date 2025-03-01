@@ -21,6 +21,7 @@ import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberGoToPositionCommand;
+import frc.robot.commands.AlgaeGrabberStates.ProcessorScoreCommand;
 import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
@@ -124,6 +125,7 @@ public class RobotContainer {
     POVButton cancelAlgaeGrab = new POVButton(operator, 180);
 
     BooleanSupplier ejectAlgaeBooleanSupplier = this::getEjectAlgae;
+    BooleanSupplier runOuttakeBooleanSupplier = () -> operator.getRightTriggerAxis() > .25;
 
     Command highGrab = new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION);
     Command lowGrab = new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.LOW_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION);
@@ -150,6 +152,9 @@ public class RobotContainer {
 
     JoystickButton intakeAlgae = new JoystickButton(driver, 1);
     intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, this::getEjectAlgae));
+
+    JoystickButton processorScore = new JoystickButton(operator, 6);
+    processorScore.onTrue(new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.DEFAULT_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier));
   }
 
   private void configureSideSelectorBindings() {
