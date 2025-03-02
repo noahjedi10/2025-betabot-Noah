@@ -17,7 +17,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.PathingConstants;
+import frc.robot.commands.DriveAtChassisSpeedsCommand;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
+import frc.robot.commands.AlgaeGrabberStates.PositionHoldCommand;
 import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.FollowPrecisePathAndRaiseElevatorAndScoreCommand;
@@ -118,6 +120,23 @@ public class AutoAlignCommandFactory {
         return origin.nearest(poseList);
     }
 
+    private static void test(Pose2d p1, Pose2d p2) {
+        Field2d f1 = new Field2d();
+        Field2d f2 = new Field2d();
+
+        f1.setRobotPose(p1);
+        f2.setRobotPose(p2);
+
+        SmartDashboard.putData("currentPose", f1);
+        SmartDashboard.putData("goalPose", f2);
+    }
+
+    public static boolean isPoseSafeToDriveTo(Pose2d currentPose, Pose2d goalPose) {
+        test(currentPose, goalPose);
+        double distSquared = Math.pow(currentPose.getX() - goalPose.getX(), 2) + Math.pow(currentPose.getY() - goalPose.getY(), 2);
+        return Math.sqrt(distSquared) < PathingConstants.MAXIMUM_PATHING_DISTANCE;
+    }
+
     public static Pose2d getClosestAlgaeIntakePose(Pose2d origin, boolean onRedAlliance) {
         List<Pose2d> poseList = (onRedAlliance) ? redAllianceAlgaePositions: blueAllianceAlgaePositions;
         return origin.nearest(poseList);
@@ -147,7 +166,7 @@ public class AutoAlignCommandFactory {
         return new SequentialCommandGroup(
             getAutoAlignDriveCommand(driveSubsystem, currentPosition, onRedAlliance, onLeftSide),
             new ExtendToHeightThenScoreCommand(elevatorSubsystem, elevatorEncoderPosition)
-        );
+        ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
     }
 
     public static Command getAutoAlignAndScoreCommand(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
@@ -155,7 +174,7 @@ public class AutoAlignCommandFactory {
         return new SequentialCommandGroup(
             getAutoAlignDriveCommand(driveSubsystem, currentPosition, onRedAlliance, onLeftSide),
             new ExtendToHeightThenScoreCommand(elevatorSubsystem, elevatorEncoderPosition, grabberSpeed)
-        );
+        ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
     }
 
     public static Command getAutoAlignAndScoreCommandParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide) {
@@ -166,7 +185,7 @@ public class AutoAlignCommandFactory {
                 new ElevatorGoToPositionAndEndCommand(elevatorSubsystem, elevatorEncoderPosition)
             ),
             new ElevatorRunGrabberAndGoToPositionCommand(elevatorSubsystem, elevatorEncoderPosition)
-        );
+        ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
     }
 
     public static Command getAutoAlignAndScoreCommandParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
@@ -177,21 +196,21 @@ public class AutoAlignCommandFactory {
                 new ElevatorGoToPositionAndEndCommand(elevatorSubsystem, elevatorEncoderPosition)
             ),
             new ElevatorRunGrabberAndGoToPositionCommand(elevatorSubsystem, elevatorEncoderPosition, grabberSpeed)
-        );
+        ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
     }
 
     public static Command getAutoAlignAndScoreCommandParallelV2(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide) {
         initalize();
         Pose2d goalPose = getClosestPose(currentPosition, onRedAlliance, onLeftSide);
 
-        return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose);
+        return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 
     public static Command getAutoAlignAndScoreCommandParallelV2(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
         initalize();
         Pose2d goalPose = getClosestPose(currentPosition, onRedAlliance, onLeftSide);
 
-        return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose, grabberSpeed);
+        return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose, grabberSpeed).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 
     public static Command getAutoAlignAndAlgaeIntakeParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, boolean ejectAfterIntaking) {
@@ -199,15 +218,47 @@ public class AutoAlignCommandFactory {
         Pose2d goalPose = getClosestAlgaeIntakePose(currentPosition, onRedAlliance);
         double elevatorEncoderPosition = getAlgaeElevatorEncoderPosition(goalPose, onRedAlliance);
 
-        Command driveAndIntake = new ParallelCommandGroup(
+        Command driveAndIntakeNoEndState = new ParallelCommandGroup(
             getAutoAlignDriveCommandAlgae(driveSubsystem, currentPosition, goalPose, onRedAlliance),
             new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, elevatorEncoderPosition, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION) 
         );
 
+        Command driveAndIntake;
+
         if(ejectAfterIntaking) {
-            return driveAndIntake.andThen(new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
+            driveAndIntake = driveAndIntakeNoEndState.andThen(new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
+        } else {
+            driveAndIntake = driveAndIntakeNoEndState.andThen(new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
         }
 
-        return driveAndIntake.andThen(new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
+        return driveAndIntake.onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
+    }
+
+    public static Command getSafeAutoAlignAlgaeIntake(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, boolean ejectAfterIntaking) {
+        initalize();
+        Pose2d goalPose = getClosestAlgaeIntakePose(currentPosition, onRedAlliance);
+        double elevatorEncoderPosition = getAlgaeElevatorEncoderPosition(goalPose, onRedAlliance);
+        
+        Command driveAndIntakeNoFinalState = new SequentialCommandGroup(
+            getAutoAlignDriveCommandAlgae(driveSubsystem, currentPosition, goalPose, onRedAlliance),
+            new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, elevatorEncoderPosition, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION)
+            .raceWith(
+                new DriveAtChassisSpeedsCommand(driveSubsystem, AlgaeGrabberSubsystemConstants.INTAKE_CHASSIS_SPEEDS)
+            ),
+            new ParallelCommandGroup(
+                new PositionHoldCommand(algaeGrabberSubsystem, elevatorSubsystem),
+                new DriveAtChassisSpeedsCommand(driveSubsystem, AlgaeGrabberSubsystemConstants.RETRACT_CHASSIS_SPEEDS)
+            ).withTimeout(0.25)
+        );
+
+        Command driveAndIntake;
+
+        if(ejectAfterIntaking) {
+            driveAndIntake = driveAndIntakeNoFinalState.andThen(new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
+        } else {
+            driveAndIntake = driveAndIntakeNoFinalState.andThen(new StowAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem));
+        }
+
+        return driveAndIntake.onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 }
