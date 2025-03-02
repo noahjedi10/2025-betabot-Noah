@@ -43,7 +43,7 @@ public class AutoAlgaeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Command algaeIntakeCommand = AutoAlignCommandFactory.getAutoAlignAndAlgaeIntakeParallel(
+    Command algaeIntakeCommand = AutoAlignCommandFactory.getSafeAutoAlignAlgaeIntake(
       driveSubsystem.getPoseEstimator().getPose2d(),
       elevatorSubsystem,
       algaeGrabberSubsystem,
