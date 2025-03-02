@@ -68,4 +68,6 @@ public class PathingConstants {
         new Pose2d(5.151, 5.187, Rotation2d.fromDegrees(240)),
         new Pose2d(3.825, 5.181, Rotation2d.fromDegrees(-60))
     );
+
+    public static final double MAXIMUM_PATHING_DISTANCE = 1.5;
 }
