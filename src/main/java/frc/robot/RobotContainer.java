@@ -23,13 +23,16 @@ import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberGoToPositionCommand;
 import frc.robot.commands.AlgaeGrabberStates.ProcessorScoreCommand;
 import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
+import frc.robot.commands.AlgaeGrabberStates.UnsafeGroundIntakeCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
+import frc.robot.commands.LEDCommands.IndicateSideCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.commands.ElevatorStates.ElevatorRetractCommand;
 import frc.robot.commands.ElevatorStates.ElevatorHPIntakeCommand;
 import frc.robot.commands.ElevatorStates.ElevatorGoToPositionCommand;
@@ -43,9 +46,11 @@ public class RobotContainer {
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   AlgaeGrabberSubsystem algaeGrabberSubsystem = new AlgaeGrabberSubsystem();
+  LEDSubsystem ledSubsystem = new LEDSubsystem();
 
   Command defaultDriveCommand = new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX);
   Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
+  Command defaultLEDSubsystemCommand = new IndicateSideCommand(ledSubsystem, () -> getScoringOnLeft());
 
   Command intakeCommand = new ElevatorHPIntakeCommand(elevatorSubsystem);
 
@@ -56,6 +61,7 @@ public class RobotContainer {
 
   boolean scoringOnLeft = true;
   boolean ejectAlgae = false;
+  boolean isManuallyOverridden = false;
 
   public RobotContainer() {
     configureDefaultBindings();
@@ -68,12 +74,14 @@ public class RobotContainer {
     configureAlgaeGrabberBindings();
     configureSideSelectorBindings();
     configureAlgaeEjectOrRetainBindings();
+    congigureManualOverrideBindings();
   }
 
   private void configureDefaultBindings() {
     driveSubsystem.setDefaultCommand(defaultDriveCommand);
     algaeGrabberSubsystem.setDefaultCommand(algaeGrabberDefaultCommand);
     elevatorSubsystem.setDefaultCommand(new ElevatorRetractCommand(elevatorSubsystem));
+    ledSubsystem.setDefaultCommand(defaultLEDSubsystemCommand);
   }
 
   private void configureDriveBindings() {
@@ -89,10 +97,11 @@ public class RobotContainer {
 
     BooleanSupplier scoringOnLeftBooleanSupplier = this::getScoringOnLeft;
     BooleanSupplier runElevatorExtruder = () -> driver.getRightTriggerAxis() > .25;
+    BooleanSupplier isManuallyOverridenBooleanSupplier = this::getManualOverride;
 
-    l2Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
-    l3Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
-    l4Score.onTrue(new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier));
+    Command autoL2 = new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION, scoringOnLeftBooleanSupplier);
+    Command autoL3 = new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, scoringOnLeftBooleanSupplier);
+    Command autoL4 = new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier);
 
     ParallelCommandGroup l2CommandManual = new ParallelCommandGroup(
       new ElevatorGoToPositionCommand(elevatorSubsystem, runElevatorExtruder, ElevatorSubsystemConstants.L2_ENCODER_POSITION),
@@ -109,9 +118,9 @@ public class RobotContainer {
       new SlowFieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX)
     );
 
-    // l2Score.onTrue(l2CommandManual);
-    // l3Score.onTrue(l3CommandManual);
-    // l4Score.onTrue(l4CommandManual);
+    l2Score.onTrue(new ConditionalCommand(l2CommandManual, autoL2, isManuallyOverridenBooleanSupplier));
+    l3Score.onTrue(new ConditionalCommand(l3CommandManual, autoL3, isManuallyOverridenBooleanSupplier));
+    l4Score.onTrue(new ConditionalCommand(l4CommandManual, autoL4, isManuallyOverridenBooleanSupplier));
 
     scoreCancel.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
 
@@ -158,8 +167,14 @@ public class RobotContainer {
     JoystickButton processorScore = new JoystickButton(operator, 6);
     processorScore.onTrue(new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier));
 
-    // JoystickButton groundIntake = new JoystickButton(operator, 5);
-    // groundIntake.onTrue(new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.GROUND_INTAKE_POSITION, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION));
+    JoystickButton groundIntake = new JoystickButton(operator, 5);
+    groundIntake.onTrue(
+      new SequentialCommandGroup(
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
+        new UnsafeGroundIntakeCommand(algaeGrabberSubsystem, elevatorSubsystem), //Run Intake
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
+      )
+    );
   }
 
   private void configureSideSelectorBindings() {
@@ -188,12 +203,31 @@ public class RobotContainer {
     }));
   }
 
+  private void congigureManualOverrideBindings() {
+    JoystickButton manualOverrideOn = new JoystickButton(operator, 8);
+    JoystickButton manualOverrideOff = new JoystickButton(operator, 7);
+
+    manualOverrideOn.onTrue(new InstantCommand(() -> {
+      isManuallyOverridden = true;
+      System.out.println("Manual override on");
+    }));
+
+    manualOverrideOff.onTrue(new InstantCommand(() -> {
+      isManuallyOverridden = false;
+      System.out.println("Manual override off");
+    }));
+  }
+
   public boolean getScoringOnLeft() {
     return scoringOnLeft;
   }
 
   public boolean getEjectAlgae() {
     return ejectAlgae;
+  }
+
+  public boolean getManualOverride() {
+    return isManuallyOverridden;
   }
 
   public Command getAutonomousCommand() {
