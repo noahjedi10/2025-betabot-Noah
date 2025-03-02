@@ -4,6 +4,8 @@
 
 package frc.robot.Constants;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 /** Add your docs here. */
 public class AlgaeGrabberSubsystemConstants {
     public static final int PIVOT_MOTOR_ID = 41;
@@ -22,4 +24,7 @@ public class AlgaeGrabberSubsystemConstants {
     public static final double INTAKE_MOTOR_SPEED = 1.0;
 
     public static final double INTAKE_CURRENT_DRAW = 50.0;
+
+    public static final ChassisSpeeds INTAKE_CHASSIS_SPEEDS = new ChassisSpeeds(.1, 0, 0);
+    public static final ChassisSpeeds RETRACT_CHASSIS_SPEEDS = new ChassisSpeeds(-.1, 0, 0);
 }
