@@ -29,7 +29,7 @@ public class ElevatorSubsystemConstants
     public static final double HIGH_ALGAE_POSITION = 42.0;
     public static final double LOW_ALGAE_POSITION = 26.0;
     public static final double PROCESSOR_SCORE_POSITION = 7.0;
-    public static final double GROUND_INTAKE_POSITION = 6.5;
+    public static final double GROUND_INTAKE_POSITION = 1.5;
 
     public static final double GRABBER_SPEED = 0.35;
     public static final double L1_GRABBER_SPEED = .15;
