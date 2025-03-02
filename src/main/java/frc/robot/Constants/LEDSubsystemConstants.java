@@ -4,9 +4,14 @@
 
 package frc.robot.Constants;
 
+import edu.wpi.first.wpilibj.util.Color;
+
 /** Add your docs here. */
 public class LEDSubsystemConstants {
     public static final int LED_PORT = 0;
     public static final int BUFFER_LENGTH = 24;
     public static final double BLINK_ON_TIME = 0.25;
+
+    public static final Color SCORING_SIDE_COLOR = Color.kGreen;
+    public static final Color NON_SCORING_SIDE_COLOR = Color.kRed;
 }
