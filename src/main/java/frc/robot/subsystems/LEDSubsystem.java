@@ -20,7 +20,7 @@ public class LEDSubsystem extends SubsystemBase {
 
   AddressableLEDBufferView viewLeft = buffer.createView(0, 8);
   AddressableLEDBufferView viewRight = buffer.createView(16, LEDSubsystemConstants.BUFFER_LENGTH - 1);
-  // AddressableLEDBufferView viewMiddle = buffer.createView(9, 15);
+  AddressableLEDBufferView viewMiddle = buffer.createView(9, 15);
 
   public LEDSubsystem() {
     addressableLED.setLength(buffer.getLength());
@@ -44,18 +44,18 @@ public class LEDSubsystem extends SubsystemBase {
     addressableLED.setData(buffer);
   }
 
-  // public void setMiddleColor(Color color, boolean blink) {
-  //   LEDPattern pattern = LEDPattern.solid(color);
-  //   if(blink)
-  //     pattern.blink(Seconds.of(LEDSubsystemConstants.BLINK_ON_TIME));
-  //   pattern.applyTo(buffer, viewMiddle);
-  //   addressableLED.setData(buffer);
-  // }
+  public void setMiddleColor(Color color, boolean blink) {
+    LEDPattern pattern = LEDPattern.solid(color);
+    if(blink)
+      pattern.blink(Seconds.of(LEDSubsystemConstants.BLINK_ON_TIME));
+    pattern.applyTo(buffer, viewMiddle);
+    addressableLED.setData(buffer);
+  }
 
   public void setAll(Color color, boolean blink) {
     setLeftColor(color, blink);
     setRightColor(color, blink);
-    // setMiddleColor(color, blink);
+    setMiddleColor(color, blink);
   }
 
   @Override

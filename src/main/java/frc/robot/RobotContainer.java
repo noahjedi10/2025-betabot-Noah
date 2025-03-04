@@ -115,7 +115,7 @@ public class RobotContainer {
 
     Command autoL2 = new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION, scoringOnLeftBooleanSupplier);
     Command autoL3 = new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, scoringOnLeftBooleanSupplier);
-    Command autoL4 = new AutoScoreL4Command(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier, ElevatorSubsystemConstants.L1_GRABBER_SPEED);
+    Command autoL4 = new AutoScoreL4Command(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION, scoringOnLeftBooleanSupplier, ElevatorSubsystemConstants.L4_GRABBER_SPEED);
 
     ParallelCommandGroup l2CommandManual = new ParallelCommandGroup(
       new ElevatorGoToPositionCommand(elevatorSubsystem, runElevatorExtruder, ElevatorSubsystemConstants.L2_ENCODER_POSITION),
@@ -182,13 +182,13 @@ public class RobotContainer {
     processorScore.onTrue(new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier));
 
     JoystickButton groundIntake = new JoystickButton(operator, 5);
-    // groundIntake.onTrue(
-    //   new SequentialCommandGroup(
-    //     new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
-    //     new UnsafeGroundIntakeCommand(algaeGrabberSubsystem, elevatorSubsystem), //Run Intake
-    //     new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
-    //   )
-    // );
+    groundIntake.onTrue(
+      new SequentialCommandGroup(
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
+        new UnsafeGroundIntakeCommand(algaeGrabberSubsystem, elevatorSubsystem), //Run Intake
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
+      )
+    );
   }
 
   private void configureSideSelectorBindings() {

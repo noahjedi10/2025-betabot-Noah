@@ -42,6 +42,12 @@ public class AutoAlignCommandFactory {
     static List<Pose2d> blueAllianceAlgaePositions = new ArrayList<>();
     static List<Pose2d> redAllianceAlgaePositions = new ArrayList<>();
 
+    static List<Pose2d> leftBlueL4Positions = new ArrayList<>();
+    static List<Pose2d> rightBlueL4Positions = new ArrayList<>();
+
+    static List<Pose2d> leftRedL4Positions = new ArrayList<>();
+    static List<Pose2d> rightRedL4Positions = new ArrayList<>();
+
     static boolean initialized = false;
 
     public static List<Pose2d> mirrorBlueSidedPoseList(List<Pose2d> list) {
@@ -95,7 +101,14 @@ public class AutoAlignCommandFactory {
 
             blueAllianceAlgaePositions = applyXYOffsetsToPoseList(PathingConstants.ALGAE_X_OFFSET, PathingConstants.ALGAE_Y_OFFSET, PathingConstants.BLUE_SIDED_ALGAE_INTAKE_POSITIONS);
             redAllianceAlgaePositions = mirrorBlueSidedPoseList(blueAllianceAlgaePositions);
-            display(blueAllianceAlgaePositions);
+
+            leftBlueL4Positions = applyXYOffsetsToPoseList(PathingConstants.L4_X_OFFSET, PathingConstants.L4_Y_OFFSET, PathingConstants.LEFT_BLUE_SIDED_SCORING_POSITIONS);
+            rightBlueL4Positions = applyXYOffsetsToPoseList(PathingConstants.L4_X_OFFSET, PathingConstants.L4_Y_OFFSET, PathingConstants.RIGHT_BLUE_SIDED_SCORING_POSITIONS);
+            
+            leftRedL4Positions = mirrorBlueSidedPoseList(leftBlueL4Positions);
+            rightRedL4Positions = mirrorBlueSidedPoseList(rightBlueL4Positions);
+
+            // display(leftRedL4Positions);
         }
     }
 
@@ -114,6 +127,27 @@ public class AutoAlignCommandFactory {
                 poseList = rightRedAllianceScoringPositions;
             } else {
                 poseList = rightBlueAllianceScoringPositions;
+            }
+        }
+
+        return origin.nearest(poseList);
+    }
+
+    public static Pose2d getClosestL4Pose(Pose2d origin, boolean onRedAlliance, boolean left) {
+        initalize();
+        List<Pose2d> poseList;
+
+        if(left) { //I'm sorry
+            if(onRedAlliance) {
+                poseList = leftRedL4Positions;
+            } else {
+                poseList = leftBlueL4Positions;
+            }
+        } else {
+            if(onRedAlliance) {
+                poseList = rightRedL4Positions;
+            } else {
+                poseList = rightBlueL4Positions;
             }
         }
 
@@ -153,6 +187,13 @@ public class AutoAlignCommandFactory {
     public static Command getAutoAlignDriveCommand(DriveSubsystem driveSubsystem, Pose2d currentPosition, boolean onRedAlliance, boolean onLeftSide) {
         initalize();
         Pose2d goalPose = getClosestPose(currentPosition, onRedAlliance, onLeftSide);
+
+        return new FollowPrecisePathCommand(driveSubsystem, goalPose);
+    }
+
+    public static Command getAutoAlignDriveCommandL4(DriveSubsystem driveSubsystem, Pose2d currentPosition, boolean onRedAlliance, boolean onLeftSide) {
+        initalize();
+        Pose2d goalPose = getClosestL4Pose(currentPosition, onRedAlliance, onLeftSide);
 
         return new FollowPrecisePathCommand(driveSubsystem, goalPose);
     }
@@ -260,5 +301,12 @@ public class AutoAlignCommandFactory {
         }
 
         return driveAndIntake.onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
+    }
+
+    public static Command getL4AutoAlignCommand(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
+        return new SequentialCommandGroup(
+            getAutoAlignDriveCommandL4(driveSubsystem, currentPosition, onRedAlliance, onLeftSide),
+            new ExtendToHeightThenScoreCommand(elevatorSubsystem, elevatorEncoderPosition, grabberSpeed)
+        ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
     }
 }
