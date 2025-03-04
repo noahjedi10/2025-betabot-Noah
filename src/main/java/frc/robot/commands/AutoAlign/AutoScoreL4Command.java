@@ -14,14 +14,14 @@ import frc.robot.utils.AutoAlignCommandFactory;
 import frc.robot.utils.PathLoader;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AutoScoreCommand extends Command {
+public class AutoScoreL4Command extends Command {
   DriveSubsystem driveSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   BooleanSupplier onLeftSide;
   double scoringPosition;
   double grabberSpeed = ElevatorSubsystemConstants.GRABBER_SPEED;
 
-  public AutoScoreCommand(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, double scoringPosition, BooleanSupplier onLeftSide) {
+  public AutoScoreL4Command(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, double scoringPosition, BooleanSupplier onLeftSide) {
     this.driveSubsystem = driveSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.scoringPosition = scoringPosition;
@@ -29,7 +29,7 @@ public class AutoScoreCommand extends Command {
     addRequirements(driveSubsystem, elevatorSubsystem);
   }
 
-  public AutoScoreCommand(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, double scoringPosition, BooleanSupplier onLeftSide, double grabberSpeed) {
+  public AutoScoreL4Command(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, double scoringPosition, BooleanSupplier onLeftSide, double grabberSpeed) {
     this.driveSubsystem = driveSubsystem;
     this.elevatorSubsystem = elevatorSubsystem;
     this.scoringPosition = scoringPosition;
@@ -53,7 +53,7 @@ public class AutoScoreCommand extends Command {
   @Override
   public void end(boolean interrupted) {    
     System.out.println("Ran!");
-    Command alignmentCommand = AutoAlignCommandFactory.getAutoAlignAndScoreCommandParallelV2(
+    Command alignmentCommand = AutoAlignCommandFactory.getAutoAlignAndScoreCommand(
       driveSubsystem.getPoseEstimator().getPose2d(), 
       elevatorSubsystem,
       driveSubsystem,

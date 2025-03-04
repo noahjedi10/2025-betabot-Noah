@@ -25,6 +25,6 @@ public class AlgaeGrabberSubsystemConstants {
 
     public static final double INTAKE_CURRENT_DRAW = 50.0;
 
-    public static final ChassisSpeeds INTAKE_CHASSIS_SPEEDS = new ChassisSpeeds(-.1, 0, 0);
-    public static final ChassisSpeeds RETRACT_CHASSIS_SPEEDS = new ChassisSpeeds(.1, 0, 0);
+    public static final ChassisSpeeds INTAKE_CHASSIS_SPEEDS = new ChassisSpeeds(-.25, 0, 0);
+    public static final ChassisSpeeds RETRACT_CHASSIS_SPEEDS = new ChassisSpeeds(.25, 0, 0);
 }

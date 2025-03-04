@@ -18,7 +18,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.RobotConstants;
@@ -30,7 +29,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   SparkMax secondary = new SparkMax(ElevatorSubsystemConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   SparkMax spinGrabber = new SparkMax(ElevatorSubsystemConstants.GRABBER_MOTOR_ID, MotorType.kBrushless);
   
-  ColorSensorV3 coralSensor = new ColorSensorV3(Port.kMXP);
+  ColorSensorV3 coralSensor = new ColorSensorV3(Port.kOnboard);
 
   RelativeEncoder rightEncoder = primary.getEncoder();
 
@@ -115,9 +114,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("ElevatorPos",getPosition());
-    SmartDashboard.putNumber("CurrentDrawElevator", getElevatorCurrentDraw());
-    SmartDashboard.putNumber("sensorProximity", coralSensor.getProximity());
+    // // This method will be called once per scheduler run
+    // SmartDashboard.putNumber("ElevatorPos",getPosition());
+    // SmartDashboard.putNumber("CurrentDrawElevator", getElevatorCurrentDraw());
+    // SmartDashboard.putNumber("sensorProximity", coralSensor.getProximity());
   }
 }

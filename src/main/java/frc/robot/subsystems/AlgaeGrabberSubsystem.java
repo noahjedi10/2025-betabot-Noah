@@ -22,7 +22,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   SparkMax pivotMotor = new SparkMax(AlgaeGrabberSubsystemConstants.PIVOT_MOTOR_ID, MotorType.kBrushless);
   SparkMax spinMotor = new SparkMax(AlgaeGrabberSubsystemConstants.SPIN_MOTOR_ID, MotorType.kBrushless);
 
-  DutyCycleEncoder thruBore = new DutyCycleEncoder(AlgaeGrabberSubsystemConstants.THRU_BORE_ENCODER_ID, 1, 0);
+  DutyCycleEncoder thruBore = new DutyCycleEncoder(AlgaeGrabberSubsystemConstants.THRU_BORE_ENCODER_ID);
 
   PIDController controller = new PIDController(1.0, 0.0, 0);
 
@@ -51,7 +51,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   }
 
   private double linearizeEncoderOutput(double currentPosition) { //This is stupid.
-    if(currentPosition > .4) {
+    if(currentPosition > .5) {
       return currentPosition - 1;
     }
     return currentPosition;

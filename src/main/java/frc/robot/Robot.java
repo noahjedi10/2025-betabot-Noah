@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.AutoAlignCommandFactory;
+import frc.robot.utils.PathLoader;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -16,6 +17,8 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    AutoAlignCommandFactory.initalize();
+    m_autonomousCommand = PathLoader.loadAuto("autoTop");
   }
 
   @Override
@@ -34,8 +37,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
