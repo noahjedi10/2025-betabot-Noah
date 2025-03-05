@@ -51,11 +51,11 @@ public class RobotContainer {
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   AlgaeGrabberSubsystem algaeGrabberSubsystem = new AlgaeGrabberSubsystem();
-  // LEDSubsystem ledSubsystem = new LEDSubsystem();
+  LEDSubsystem ledSubsystem = new LEDSubsystem();
 
   Command defaultDriveCommand = new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX);
   Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
-  // Command defaultLEDSubsystemCommand = new IndicateSideCommand(ledSubsystem, () -> getScoringOnLeft());
+  Command defaultLEDSubsystemCommand = new IndicateSideCommand(ledSubsystem, () -> getScoringOnLeft());
 
   Command intakeCommand = new ElevatorHPIntakeCommand(elevatorSubsystem);
 
@@ -95,7 +95,7 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(defaultDriveCommand);
     algaeGrabberSubsystem.setDefaultCommand(algaeGrabberDefaultCommand);
     elevatorSubsystem.setDefaultCommand(new ElevatorRetractCommand(elevatorSubsystem));
-    // ledSubsystem.setDefaultCommand(defaultLEDSubsystemCommand);
+    ledSubsystem.setDefaultCommand(defaultLEDSubsystemCommand);
   }
 
   private void configureDriveBindings() {
@@ -186,7 +186,8 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
         new UnsafeGroundIntakeCommand(algaeGrabberSubsystem, elevatorSubsystem), //Run Intake
-        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
+        new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier)
+        // new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
       )
     );
   }

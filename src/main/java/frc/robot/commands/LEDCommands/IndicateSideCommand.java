@@ -7,7 +7,6 @@ package frc.robot.commands.LEDCommands;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.LEDSubsystemConstants;
 import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -28,19 +27,15 @@ public class IndicateSideCommand extends Command {
   @Override
   public void execute() {
     if(leftSideSelected.getAsBoolean()) {
-      ledSubsystem.setLeftColor(LEDSubsystemConstants.SCORING_SIDE_COLOR, true);
-      ledSubsystem.setRightColor(LEDSubsystemConstants.NON_SCORING_SIDE_COLOR, false);
-    } else {
-      ledSubsystem.setLeftColor(LEDSubsystemConstants.NON_SCORING_SIDE_COLOR, false);
-      ledSubsystem.setRightColor(LEDSubsystemConstants.SCORING_SIDE_COLOR, true);
+      ledSubsystem.leftOn();
+      return;
     }
+    ledSubsystem.rightOn();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    ledSubsystem.setAll(LEDSubsystemConstants.NON_SCORING_SIDE_COLOR, true);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
