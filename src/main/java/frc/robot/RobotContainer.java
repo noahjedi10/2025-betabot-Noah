@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
+import frc.robot.Constants.LEDSubsystemConstants;
 import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
@@ -32,6 +33,8 @@ import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.AutoAlign.AutoScoreL4Command;
 import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
 import frc.robot.commands.ElevatorStates.AutonomousElevatorCommands.ExtendToHeightThenScoreCommand;
+import frc.robot.commands.Failsafes.OperatorFailsafeCommand;
+import frc.robot.commands.LEDCommands.FullIndicateCommand;
 import frc.robot.commands.LEDCommands.IndicateSideCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -55,7 +58,7 @@ public class RobotContainer {
 
   Command defaultDriveCommand = new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX);
   Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
-  Command defaultLEDSubsystemCommand = new IndicateSideCommand(ledSubsystem, () -> getScoringOnLeft());
+  Command defaultLEDSubsystemCommand = new IndicateSideCommand(ledSubsystem, () -> getScoringOnLeft(), () -> getManualOverride());
 
   Command intakeCommand = new ElevatorHPIntakeCommand(elevatorSubsystem);
 
@@ -227,6 +230,8 @@ public class RobotContainer {
     JoystickButton manualOverrideOn = new JoystickButton(operator, 8);
     JoystickButton manualOverrideOff = new JoystickButton(operator, 7);
 
+    JoystickButton failsafeButton = new JoystickButton(operator, 1);
+
     manualOverrideOn.onTrue(new InstantCommand(() -> {
       isManuallyOverridden = true;
       System.out.println("Manual override on");
@@ -236,6 +241,17 @@ public class RobotContainer {
       isManuallyOverridden = false;
       System.out.println("Manual override off");
     }));
+
+    failsafeButton.toggleOnTrue(new OperatorFailsafeCommand(
+      elevatorSubsystem,
+      algaeGrabberSubsystem,
+      operator::getLeftY,
+      operator::getRightY,
+      () -> operator.getRightTriggerAxis() > .25
+    ).raceWith(
+      new FullIndicateCommand(ledSubsystem, LEDSubsystemConstants.OPERATOR_FINAL_FAILSAFE_ON)
+    ));
+
   }
 
   public boolean getScoringOnLeft() {

@@ -4,6 +4,9 @@
 
 package frc.robot.Constants;
 
+import static edu.wpi.first.units.Units.Seconds;
+
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 
 /** Add your docs here. */
@@ -14,4 +17,8 @@ public class LEDSubsystemConstants {
 
     public static final Color SCORING_SIDE_COLOR = Color.kGreen;
     public static final Color NON_SCORING_SIDE_COLOR = Color.kRed;
+
+    public static final LEDPattern OPERATOR_FINAL_FAILSAFE_ON = LEDPattern.solid(Color.kBlue).blink(Seconds.of(.05));
+    public static final LEDPattern MANUAL_MODE_ON = LEDPattern.solid(Color.kYellow).blink(Seconds.of(.5));
+ 
 }

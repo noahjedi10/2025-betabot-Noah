@@ -4,22 +4,17 @@
 
 package frc.robot.commands.LEDCommands;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.LEDSubsystemConstants;
 import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IndicateSideCommand extends Command {
+public class FullIndicateCommand extends Command {
   LEDSubsystem ledSubsystem;
-  BooleanSupplier leftSideSelected;
-  BooleanSupplier isInManualMode;
-  public IndicateSideCommand(LEDSubsystem ledSubsystem, BooleanSupplier leftSideSelected, BooleanSupplier isInManualMode) {
+  LEDPattern pattern;
+  public FullIndicateCommand(LEDSubsystem ledSubsystem, LEDPattern pattern) {
     this.ledSubsystem = ledSubsystem;
-    this.leftSideSelected = leftSideSelected;
-    this.isInManualMode = isInManualMode;
+    this.pattern = pattern;
     addRequirements(ledSubsystem);
   }
 
@@ -30,24 +25,17 @@ public class IndicateSideCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(isInManualMode.getAsBoolean()) {
-      LEDPattern p = LEDSubsystemConstants.MANUAL_MODE_ON;
-      ledSubsystem.setMiddle(p);
-      ledSubsystem.setRight(p);
-      ledSubsystem.setLeft(p);
-      ledSubsystem.updateBuffer();
-    }
-
-    if(leftSideSelected.getAsBoolean()) {
-      ledSubsystem.leftOn();
-      return;
-    }
-    ledSubsystem.rightOn();
+    ledSubsystem.setLeft(pattern);
+    ledSubsystem.setRight(pattern);
+    ledSubsystem.setMiddle(pattern);
+    ledSubsystem.updateBuffer();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    ledSubsystem.stopAll();
+  }
 
   // Returns true when the command should end.
   @Override

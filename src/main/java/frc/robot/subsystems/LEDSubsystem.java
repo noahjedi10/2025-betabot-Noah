@@ -33,15 +33,37 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void leftOn() {
-    onPattern.applyTo(viewLeft);
-    offPattern.applyTo(viewRight);
-    addressableLED.setData(buffer);
+    setLeft(onPattern);
+    setRight(offPattern);
+    updateBuffer();
   }
 
   public void rightOn() {
-    onPattern.applyTo(viewRight);
-    offPattern.applyTo(viewLeft);
+    setRight(onPattern);
+    setLeft(offPattern);
+    updateBuffer();
+  }
+
+  public void setMiddle(LEDPattern pattern) {
+    pattern.applyTo(viewMiddle);
+  }
+
+  public void setLeft(LEDPattern pattern) {
+    pattern.applyTo(viewLeft);
+  }
+
+  public void setRight(LEDPattern pattern) {
+    pattern.applyTo(viewRight);
+  }
+
+  public void updateBuffer() {
     addressableLED.setData(buffer);
+  }
+
+  public void stopAll() {
+    setMiddle(LEDPattern.kOff);
+    setRight(LEDPattern.kOff);
+    setLeft(LEDPattern.kOff);
   }
 
   @Override
