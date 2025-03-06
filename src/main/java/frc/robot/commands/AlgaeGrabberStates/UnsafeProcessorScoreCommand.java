@@ -8,28 +8,22 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
+import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+//If the algae grabber isn't in the correct position prior to this command being scheduled, it will break it.
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ProcessorScoreCommand extends Command {
-  ElevatorSubsystem elevatorSubsystem;
+public class UnsafeProcessorScoreCommand extends Command {
   AlgaeGrabberSubsystem algaeGrabberSubsystem;
+  ElevatorSubsystem elevatorSubsystem;
+  BooleanSupplier runExtrudeBooleanSupplier;
 
-  double elevatorPosition;
-  double algaeGrabberPosition;
-
-  BooleanSupplier runOuttake;
-
-  public ProcessorScoreCommand(ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, double elevatorPosition, double algaeGrabberPosition, BooleanSupplier runOuttake) {
+  public UnsafeProcessorScoreCommand(AlgaeGrabberSubsystem algaeGrabberSubsystem, ElevatorSubsystem elevatorSubsystem, BooleanSupplier runExtrudeBooleanSupplier) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.algaeGrabberSubsystem = algaeGrabberSubsystem;
-
-    this.elevatorPosition = elevatorPosition;
-    this.algaeGrabberPosition = algaeGrabberPosition;
-
-    this.runOuttake = runOuttake;
-
+    this.runExtrudeBooleanSupplier = runExtrudeBooleanSupplier;
     addRequirements(elevatorSubsystem, algaeGrabberSubsystem);
   }
 
@@ -40,29 +34,23 @@ public class ProcessorScoreCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Raising elevator with auto end");
-    elevatorSubsystem.setPosition(elevatorPosition);
-
-    if(elevatorSubsystem.getPosition() > AlgaeGrabberSubsystemConstants.MINIMUM_SAFE_ELEVATOR_ENCODER_POSITION) {
-      algaeGrabberSubsystem.setPosition(algaeGrabberPosition);
-    } else {
-      algaeGrabberSubsystem.setPivotMotor(0.0);
-    }
-
-    algaeGrabberSubsystem.setSpinMotor((runOuttake.getAsBoolean()) ? -AlgaeGrabberSubsystemConstants.INTAKE_MOTOR_SPEED: 0.0);
+    elevatorSubsystem.setPosition(ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION);
+    algaeGrabberSubsystem.setPosition(AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION);
+    
+    algaeGrabberSubsystem.setSpinMotor((runExtrudeBooleanSupplier.getAsBoolean()) ? -AlgaeGrabberSubsystemConstants.INTAKE_MOTOR_SPEED: 0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algaeGrabberSubsystem.stopAll();
     elevatorSubsystem.stopAll();
+    algaeGrabberSubsystem.stopAll();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
-    // return algaeGrabberSubsystem.getSpinMotorCurrentDraw() > AlgaeGrabberSubsystemConstants.INTAKE_CURRENT_DRAW;
+    // return false;
+    return algaeGrabberSubsystem.getSpinMotorCurrentDraw() > AlgaeGrabberSubsystemConstants.INTAKE_CURRENT_DRAW;
   }
 }

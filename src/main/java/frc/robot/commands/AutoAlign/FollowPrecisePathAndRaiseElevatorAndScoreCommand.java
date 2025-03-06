@@ -49,13 +49,20 @@ public class FollowPrecisePathAndRaiseElevatorAndScoreCommand extends FollowPrec
     double yChassisSpeeds = Y_PRECISE_PATH_PID.calculate(currentY, goalY);
     double omegaRads = ROTATE_PRECISE_PATH_PID.calculate(currentRotRads, goalRotRads);
 
-    driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-xChassisSpeeds, -yChassisSpeeds, -omegaRads, currentPose.getRotation()));
-    
     elevatorSubsystem.setPosition(encoderPosition);
 
-    if(isDriveLoopAtSetpoint() && elevatorSubsystem.isElevatorPIDAtSetpoint()) {
-      System.out.println("Setting grabber");
-      elevatorSubsystem.setGrabber(grabberSpeed);
+    if(isDriveLoopAtSetpoint()) {
+      pidReachedSetpoint = true;
+    }
+    
+    if(!pidReachedSetpoint) {
+      driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-xChassisSpeeds, -yChassisSpeeds, -omegaRads, currentPose.getRotation()));
+    } else {
+      driveSubsystem.drive(new ChassisSpeeds());
+      if(elevatorSubsystem.isElevatorPIDAtSetpoint()) {
+        System.out.println("Setting grabber");
+        elevatorSubsystem.setGrabber(grabberSpeed);
+      }
     }
   }
 

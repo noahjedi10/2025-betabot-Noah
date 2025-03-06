@@ -39,7 +39,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     spinConfig.openLoopRampRate(.25);
     spinMotor.configure(spinConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    controller.setTolerance(.25);
+    controller.setTolerance(.1);
   }
 
   public void setSpinMotor(double percent) {
@@ -78,6 +78,8 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   }
 
   public boolean isAlgaeGrabberPIDAtSetpoint() {
+    // double at = linearizeEncoderOutput(getPosition());
+    // return Math.abs(at - setpoint) < .1;
     return controller.atSetpoint();
   }
 

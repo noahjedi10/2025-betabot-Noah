@@ -23,9 +23,9 @@ import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.AlgaeGrabberGoToPositionCommand;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.ElevatorPopUpAndAlgaeGrabberGoToPositionCommand;
-import frc.robot.commands.AlgaeGrabberStates.ProcessorScoreCommand;
 import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.UnsafeGroundIntakeCommand;
+import frc.robot.commands.AlgaeGrabberStates.UnsafeProcessorScoreCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
@@ -65,7 +65,7 @@ public class RobotContainer {
   );
 
   boolean scoringOnLeft = true;
-  boolean ejectAlgae = false;
+  boolean ejectAlgae = true;
   boolean isManuallyOverridden = false;
 
   public RobotContainer() {
@@ -179,15 +179,20 @@ public class RobotContainer {
     intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, this::getEjectAlgae));
 
     JoystickButton processorScore = new JoystickButton(operator, 6);
-    processorScore.onTrue(new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier));
+    processorScore.onTrue(
+      new SequentialCommandGroup(
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
+        new UnsafeProcessorScoreCommand(algaeGrabberSubsystem, elevatorSubsystem, runOuttakeBooleanSupplier), //Run Intake
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
+      )
+    );
 
     JoystickButton groundIntake = new JoystickButton(operator, 5);
     groundIntake.onTrue(
       new SequentialCommandGroup(
         new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
         new UnsafeGroundIntakeCommand(algaeGrabberSubsystem, elevatorSubsystem), //Run Intake
-        new ProcessorScoreCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.PROCESSOR_SCORE_POSITION, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION, runOuttakeBooleanSupplier)
-        // new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
       )
     );
   }

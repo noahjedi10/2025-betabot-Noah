@@ -18,6 +18,7 @@ public class ElevatorPopUpAndAlgaeGrabberGoToPositionCommand extends Command {
   double algaeGrabberEncoderPosition;
 
   public ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(AlgaeGrabberSubsystem algaeGrabberSubsystem, ElevatorSubsystem elevatorSubsystem, double algaeGrabberEncoderPosition) {
+    System.out.println(algaeGrabberEncoderPosition);
     this.elevatorSubsystem = elevatorSubsystem;
     this.algaeGrabberSubsystem = algaeGrabberSubsystem;
     this.algaeGrabberEncoderPosition = algaeGrabberEncoderPosition;
@@ -29,6 +30,7 @@ public class ElevatorPopUpAndAlgaeGrabberGoToPositionCommand extends Command {
   public void initialize() {
     double currentPosition = elevatorSubsystem.getPosition();
     double minPosition = AlgaeGrabberSubsystemConstants.MINIMUM_SAFE_ELEVATOR_ENCODER_POSITION;
+    algaeGrabberSubsystem.setPosition(algaeGrabberEncoderPosition);
     homePosition = (currentPosition < minPosition) ? minPosition: currentPosition;
   }
 
@@ -38,6 +40,7 @@ public class ElevatorPopUpAndAlgaeGrabberGoToPositionCommand extends Command {
     System.out.println("Setting elevator for pop up");
     elevatorSubsystem.setPosition(homePosition);
     if(elevatorSubsystem.isElevatorPIDAtSetpoint()) {
+      System.out.println(algaeGrabberEncoderPosition);
       algaeGrabberSubsystem.setPosition(algaeGrabberEncoderPosition);
     } else {
       algaeGrabberSubsystem.setPivotMotor(0.0);
@@ -47,7 +50,8 @@ public class ElevatorPopUpAndAlgaeGrabberGoToPositionCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Ended "+ String.valueOf(interrupted));
+    System.out.println(algaeGrabberEncoderPosition);
+    // System.out.println("Ended "+ String.valueOf(interrupted));
     elevatorSubsystem.stopAll();
     algaeGrabberSubsystem.stopAll();
   }
@@ -56,5 +60,6 @@ public class ElevatorPopUpAndAlgaeGrabberGoToPositionCommand extends Command {
   @Override
   public boolean isFinished() {
     return algaeGrabberSubsystem.isAlgaeGrabberPIDAtSetpoint();
+    // return false;
   }
 }
