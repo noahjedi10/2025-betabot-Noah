@@ -251,7 +251,6 @@ public class RobotContainer {
     ).raceWith(
       new FullIndicateCommand(ledSubsystem, LEDSubsystemConstants.OPERATOR_FINAL_FAILSAFE_ON)
     ));
-
   }
 
   public boolean getScoringOnLeft() {
