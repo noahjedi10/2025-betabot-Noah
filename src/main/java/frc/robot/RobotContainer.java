@@ -184,7 +184,7 @@ public class RobotContainer {
     JoystickButton processorScore = new JoystickButton(operator, 6);
     processorScore.onTrue(
       new SequentialCommandGroup(
-        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.GROUND_INTAKE_ENCODER_POSITION), //Hop grabber over fleft module
+        new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.PROCESSOR_SCORING_ENCODER_POSITION), //Hop grabber over fleft module
         new UnsafeProcessorScoreCommand(algaeGrabberSubsystem, elevatorSubsystem, runOuttakeBooleanSupplier), //Run Intake
         new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION) //Stow algae
       )

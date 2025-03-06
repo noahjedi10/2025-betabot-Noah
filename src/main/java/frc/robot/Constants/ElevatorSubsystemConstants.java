@@ -21,7 +21,7 @@ public class ElevatorSubsystemConstants
     public static final double L1_ENCODER_POSITION = 0.0;
     public static final double L2_ENCODER_POSITION = 7.5;
     public static final double L3_ENCODER_POSITION = 24.5;
-    public static final double L4_ENCODER_POSITION = 51.0;
+    public static final double L4_ENCODER_POSITION = 52.5;
 
     public static final double HP_ENCODER_POSITION = 1.5;
     public static final double DEFAULT_POSITION = 1.5; //So the carriage doesn't slam into the base.
@@ -33,7 +33,8 @@ public class ElevatorSubsystemConstants
 
     public static final double GRABBER_SPEED = 0.35;
     public static final double L1_GRABBER_SPEED = .15;
-    public static final double L4_GRABBER_SPEED = .4;
+    public static final double L4_GRABBER_SPEED = .29
+    ;
     public static final double INTAKE_GRABBER_SPEED = 0.2;
 
     public static final double HOMED_CURRENT_DRAW = 60.0;
@@ -42,7 +43,7 @@ public class ElevatorSubsystemConstants
     public static final double MAX_VELOCITY = 15000;
     public static final double AT_SETPOINT_TOLERANCE = 1.0;
 
-    public static final double ARBITRARY_FEEDFORWARD = 0.8;
+    public static final double ARBITRARY_FEEDFORWARD = 0.071;
 
     public static final List<Double> ALGAE_ELEVATOR_POSITIONS = Arrays.asList(
         
