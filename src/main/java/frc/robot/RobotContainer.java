@@ -31,7 +31,6 @@ import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.Alga
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.AutoAlign.AutoScoreL4Command;
-import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
 import frc.robot.commands.ElevatorStates.AutonomousElevatorCommands.ExtendToHeightThenScoreCommand;
 import frc.robot.commands.Failsafes.OperatorFailsafeCommand;
 import frc.robot.commands.LEDCommands.FullIndicateCommand;
@@ -64,7 +63,7 @@ public class RobotContainer {
 
   Command homeElevatorAndDontBreakAlgaeGrabber = new SequentialCommandGroup(
     new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION),
-    new ElevatorReturnToHomeAndZeroCommand(elevatorSubsystem).raceWith(new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION))
+    new ElevatorRetractCommand(elevatorSubsystem).alongWith(new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION))
   );
 
   boolean scoringOnLeft = true;
@@ -83,6 +82,18 @@ public class RobotContainer {
     NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(1.5));
     NamedCommands.registerCommand("ScoreL2", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION).withTimeout(1));
     NamedCommands.registerCommand("HPIntake", intakeCommand);
+    NamedCommands.registerCommand("LowAlgae", new SequentialCommandGroup(
+      new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.LOW_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION),
+      new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem).withTimeout(1)
+    ));
+    NamedCommands.registerCommand("HighAlgae", new SequentialCommandGroup(
+      new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION),
+      new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem).withTimeout(1)
+    ));
+    NamedCommands.registerCommand("AutoAlgaeIntake", new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, () -> true).withTimeout(2));
+    NamedCommands.registerCommand("AutoScoreL3Left", new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> true).withTimeout(1.5));
+    NamedCommands.registerCommand("AutoScoreL3Right", new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> false).withTimeout(1.5));
+
   }
 
   private void configureBindings() {

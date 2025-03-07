@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     AutoAlignCommandFactory.initalize();
-    m_autonomousCommand = PathLoader.loadAuto("autoTop");
+    m_autonomousCommand = PathLoader.loadAuto("algaeRemovalTwoL3Top");
   }
 
   @Override
