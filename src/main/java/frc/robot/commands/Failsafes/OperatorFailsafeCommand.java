@@ -43,8 +43,8 @@ public class OperatorFailsafeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { //Will this help? Will drivers even think to use it should an algae intake go awry? Many questions. Questions like: Where is the climb?? Where is the aegis chain mount? Why do the pulleys squeak? Can we reliably do L4??
-    elevatorSubsystem.setSpin(elevatorSupplier.getAsDouble() * 0.15);
-    algaeGrabberSubsystem.setPivotMotor(algaeGrabberPivotSupplier.getAsDouble() * 0.5);
+    elevatorSubsystem.setSpin(elevatorSupplier.getAsDouble() * -0.15);
+    algaeGrabberSubsystem.setPivotMotor(algaeGrabberPivotSupplier.getAsDouble() * -0.5);
     algaeGrabberSubsystem.setSpinMotor((runExtruder.getAsBoolean()) ? -AlgaeGrabberSubsystemConstants.INTAKE_MOTOR_SPEED: 0.0);
   }
 
