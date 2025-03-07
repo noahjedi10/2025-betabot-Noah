@@ -39,8 +39,8 @@ public class ElevatorSubsystemConstants
 
     public static final double HOMED_CURRENT_DRAW = 60.0;
 
-    public static final double MAX_ACCELERATION = 500;
-    public static final double MAX_VELOCITY = 1000;
+    public static final double MAX_ACCELERATION = 2500;
+    public static final double MAX_VELOCITY = 5000;
     public static final double AT_SETPOINT_TOLERANCE = 1.0;
 
     public static final double ARBITRARY_FEEDFORWARD = 0.071;

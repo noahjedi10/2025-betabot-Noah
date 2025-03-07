@@ -13,44 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoAlgaeIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "AutoScoreL3Left"
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "HPIntake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "p2_artl3"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "p3_artl3"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "AutoScoreL3Right"
+            "name": "HPIntake"
           }
         }
       ]

@@ -254,6 +254,13 @@ public class AutoAlignCommandFactory {
         return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose, grabberSpeed).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 
+    public static Command getAutonomousAutoAlign(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
+        initalize();
+        Pose2d goalPose = getClosestPose(currentPosition, onRedAlliance, onLeftSide);
+
+        return new FollowPrecisePathAndRaiseElevatorAndScoreCommand(driveSubsystem, elevatorSubsystem, elevatorEncoderPosition, goalPose, grabberSpeed).withTimeout(5).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
+    }
+
     public static Command getAutoAlignAndAlgaeIntakeParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, boolean ejectAfterIntaking) {
         initalize();
         Pose2d goalPose = getClosestAlgaeIntakePose(currentPosition, onRedAlliance);

@@ -30,6 +30,7 @@ import frc.robot.commands.AlgaeGrabberStates.UnsafeProcessorScoreCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
+import frc.robot.commands.AutoAlign.AutoScoreCommandAuton;
 import frc.robot.commands.AutoAlign.AutoScoreL4Command;
 import frc.robot.commands.ElevatorStates.AutonomousElevatorCommands.ExtendToHeightThenScoreCommand;
 import frc.robot.commands.Failsafes.OperatorFailsafeCommand;
@@ -91,8 +92,8 @@ public class RobotContainer {
       new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem).withTimeout(1)
     ));
     NamedCommands.registerCommand("AutoAlgaeIntake", new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, () -> true).withTimeout(2));
-    NamedCommands.registerCommand("AutoScoreL3Left", new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> true).withTimeout(1.5));
-    NamedCommands.registerCommand("AutoScoreL3Right", new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> false).withTimeout(1.5));
+    NamedCommands.registerCommand("AutoScoreL3Left", new AutoScoreCommandAuton(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> true));
+    NamedCommands.registerCommand("AutoScoreL3Right", new AutoScoreCommandAuton(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> false));
 
   }
 
