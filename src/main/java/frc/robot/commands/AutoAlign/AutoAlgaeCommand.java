@@ -5,6 +5,7 @@
 package frc.robot.commands.AutoAlign;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
@@ -18,13 +19,20 @@ public class AutoAlgaeCommand extends Command {
   DriveSubsystem driveSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   AlgaeGrabberSubsystem algaeGrabberSubsystem;
-  BooleanSupplier ejectAfterIntakingBooleanSupplier;
+  BooleanSupplier runExtruderBooleanSupplier;
 
-  public AutoAlgaeCommand(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, BooleanSupplier ejectAfterIntakingBooleanSupplier) {
+  DoubleSupplier x;
+  DoubleSupplier y;
+  DoubleSupplier rot;
+
+  public AutoAlgaeCommand(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, BooleanSupplier runExtruderBooleanSupplier, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.driveSubsystem = driveSubsystem;
     this.algaeGrabberSubsystem = algaeGrabberSubsystem;
-    this.ejectAfterIntakingBooleanSupplier = ejectAfterIntakingBooleanSupplier;
+    this.runExtruderBooleanSupplier = runExtruderBooleanSupplier;
+    this.x = x;
+    this.y = y;
+    this.rot = rot;
 
     addRequirements(driveSubsystem, algaeGrabberSubsystem, elevatorSubsystem);
   }
@@ -33,7 +41,6 @@ public class AutoAlgaeCommand extends Command {
   @Override
   public void initialize() {
     System.out.println("Running auto algae intake");
-    System.out.println(ejectAfterIntakingBooleanSupplier.getAsBoolean());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,13 +50,16 @@ public class AutoAlgaeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Command algaeIntakeCommand = AutoAlignCommandFactory.getSafeAutoAlignAlgaeIntake(
+    Command algaeIntakeCommand = AutoAlignCommandFactory.getSafeAutoAlignAlgaeIntakeWithDrive(
       driveSubsystem.getPoseEstimator().getPose2d(),
       elevatorSubsystem,
       algaeGrabberSubsystem,
       driveSubsystem,
       PathLoader.getShouldFlipPath(),
-      ejectAfterIntakingBooleanSupplier.getAsBoolean()
+      x,
+      y,
+      rot,
+      runExtruderBooleanSupplier
     );
     algaeIntakeCommand.schedule();
   }

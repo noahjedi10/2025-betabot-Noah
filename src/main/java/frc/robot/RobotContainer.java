@@ -90,7 +90,7 @@ public class RobotContainer {
       new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION),
       new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem).withTimeout(1)
     ));
-    NamedCommands.registerCommand("AutoAlgaeIntake", new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, () -> true).withTimeout(2));
+    // NamedCommands.registerCommand("AutoAlgaeIntake", new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, () -> true).withTimeout(2));
     NamedCommands.registerCommand("AutoScoreL3Left", new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> true).withTimeout(1.5));
     NamedCommands.registerCommand("AutoScoreL3Right", new AutoScoreCommand(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> false).withTimeout(1.5));
 
@@ -190,7 +190,7 @@ public class RobotContainer {
     cancelAlgaeGrab.onTrue(homeElevatorAndDontBreakAlgaeGrabber);
 
     JoystickButton intakeAlgae = new JoystickButton(driver, 1);
-    intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, this::getEjectAlgae));
+    intakeAlgae.onTrue(new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, runOuttakeBooleanSupplier, driver::getLeftX, driver::getLeftY, driver::getRightX));
 
     JoystickButton processorScore = new JoystickButton(operator, 6);
     processorScore.onTrue(

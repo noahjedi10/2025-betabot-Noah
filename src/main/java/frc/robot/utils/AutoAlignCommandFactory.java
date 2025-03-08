@@ -6,6 +6,8 @@ package frc.robot.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,12 +15,15 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.PathingConstants;
 import frc.robot.commands.DriveAtChassisSpeedsCommand;
+import frc.robot.commands.SlowFieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
+import frc.robot.commands.AlgaeGrabberStates.PositionHoldAndEjectCommand;
 import frc.robot.commands.AlgaeGrabberStates.PositionHoldCommand;
 import frc.robot.commands.AlgaeGrabberStates.StowAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
@@ -301,6 +306,25 @@ public class AutoAlignCommandFactory {
         }
 
         return driveAndIntake.onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
+    }
+
+    public static Command getSafeAutoAlignAlgaeIntakeWithDrive(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, BooleanSupplier eject) {
+        initalize();
+        Pose2d goalPose = getClosestAlgaeIntakePose(currentPosition, onRedAlliance);
+        double elevatorEncoderPosition = getAlgaeElevatorEncoderPosition(goalPose, onRedAlliance);
+
+        Command driveAndIntake = new SequentialCommandGroup(
+            getAutoAlignDriveCommandAlgae(driveSubsystem, currentPosition, goalPose, onRedAlliance),
+            new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, elevatorEncoderPosition, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION)
+            .raceWith(
+                new DriveAtChassisSpeedsCommand(driveSubsystem, AlgaeGrabberSubsystemConstants.INTAKE_CHASSIS_SPEEDS)
+            )
+        ).andThen(new PrintCommand("Algae acquired"));
+
+        return driveAndIntake.andThen(new ParallelCommandGroup(
+            new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, eject),
+            new SlowFieldDriveCommand(driveSubsystem, x, y, rot)
+        ));
     }
 
     public static Command getL4AutoAlignCommand(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {

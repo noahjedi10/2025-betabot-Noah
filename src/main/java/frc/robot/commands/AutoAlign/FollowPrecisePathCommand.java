@@ -45,6 +45,7 @@ public class FollowPrecisePathCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Driving");
     Pose2d currentPose = driveSubsystem.getPoseEstimator().getPose2d();
     double currentX = currentPose.getX();
     double currentY = currentPose.getY();
@@ -71,7 +72,7 @@ public class FollowPrecisePathCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (X_PRECISE_PATH_PID.atSetpoint() && Y_PRECISE_PATH_PID.atSetpoint() && ROTATE_PRECISE_PATH_PID.atSetpoint());
-    // return true;
+    // return (X_PRECISE_PATH_PID.atSetpoint() && Y_PRECISE_PATH_PID.atSetpoint() && ROTATE_PRECISE_PATH_PID.atSetpoint());
+    return true;
   }
 }
