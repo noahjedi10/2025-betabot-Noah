@@ -314,7 +314,7 @@ public class AutoAlignCommandFactory {
         return driveAndIntake.onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 
-    public static Command getSafeAutoAlignAlgaeIntakeWithDrive(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, BooleanSupplier eject) {
+    public static Command getSafeAutoAlignAlgaeIntakeWithSlowDrive(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, AlgaeGrabberSubsystem algaeGrabberSubsystem, DriveSubsystem driveSubsystem, boolean onRedAlliance, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot, BooleanSupplier eject) {
         initalize();
         Pose2d goalPose = getClosestAlgaeIntakePose(currentPosition, onRedAlliance);
         double elevatorEncoderPosition = getAlgaeElevatorEncoderPosition(goalPose, onRedAlliance);
@@ -330,7 +330,7 @@ public class AutoAlignCommandFactory {
         return driveAndIntake.andThen(new ParallelCommandGroup(
             new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, eject),
             new SlowFieldDriveCommand(driveSubsystem, x, y, rot)
-        ));
+        )).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 
     public static Command getL4AutoAlignCommand(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
