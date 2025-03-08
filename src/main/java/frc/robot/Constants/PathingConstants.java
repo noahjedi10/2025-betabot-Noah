@@ -57,8 +57,8 @@ public class PathingConstants {
     public static final double X_OFFSET = 0.09;
     public static final double Y_OFFSET = 0.0;
 
-    public static final double ALGAE_X_OFFSET = -0.2;
-    public static final double ALGAE_Y_OFFSET = -.65;
+    public static final double ALGAE_X_OFFSET = -0.3;
+    public static final double ALGAE_Y_OFFSET = -1.0; //-.65
 
     public static final double L4_X_OFFSET = 0.1;
     public static final double L4_Y_OFFSET = 0.0;

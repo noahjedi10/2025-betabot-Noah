@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "p1_artl3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoScoreL3Left"
+            "pathName": "p2_artl3"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "HPIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "p3_artl3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoScoreL3Left"
           }
         }
       ]

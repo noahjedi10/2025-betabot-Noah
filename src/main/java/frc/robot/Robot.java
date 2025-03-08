@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.utils.AutoAlignCommandFactory;
 import frc.robot.utils.PathLoader;
 
@@ -19,7 +22,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     AutoAlignCommandFactory.initalize();
-    m_autonomousCommand = PathLoader.loadAuto("algaeRemovalTwoL3Top");
+    m_autonomousCommand = PathLoader.loadAuto("2l4Top");
   }
 
   @Override

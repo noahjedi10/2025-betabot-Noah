@@ -79,8 +79,8 @@ public class RobotContainer {
   }
 
   private void configureNamedCommands() {
-    NamedCommands.registerCommand("ScoreL4", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION).withTimeout(2));
-    NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(1.5));
+    NamedCommands.registerCommand("ScoreL4", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION).withTimeout(3));
+    NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(3));
     NamedCommands.registerCommand("ScoreL2", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION).withTimeout(1));
     NamedCommands.registerCommand("HPIntake", intakeCommand);
     NamedCommands.registerCommand("LowAlgae", new SequentialCommandGroup(
@@ -92,8 +92,8 @@ public class RobotContainer {
       new EjectAlgaeCommand(algaeGrabberSubsystem, elevatorSubsystem).withTimeout(1)
     ));
     NamedCommands.registerCommand("AutoAlgaeIntake", new AutoAlgaeCommand(driveSubsystem, elevatorSubsystem, algaeGrabberSubsystem, () -> true).withTimeout(2));
-    NamedCommands.registerCommand("AutoScoreL3Left", new AutoScoreCommandAuton(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> true));
-    NamedCommands.registerCommand("AutoScoreL3Right", new AutoScoreCommandAuton(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> false));
+    NamedCommands.registerCommand("AutoScoreL3Left", new AutoScoreCommandAuton(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> true).withTimeout(2));
+    NamedCommands.registerCommand("AutoScoreL3Right", new AutoScoreCommandAuton(driveSubsystem, elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION, () -> false).withTimeout(2));
 
   }
 
