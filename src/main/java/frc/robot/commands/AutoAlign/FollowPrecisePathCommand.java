@@ -72,7 +72,7 @@ public class FollowPrecisePathCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return (X_PRECISE_PATH_PID.atSetpoint() && Y_PRECISE_PATH_PID.atSetpoint() && ROTATE_PRECISE_PATH_PID.atSetpoint());
-    return true;
+    return (X_PRECISE_PATH_PID.atSetpoint() && Y_PRECISE_PATH_PID.atSetpoint() && ROTATE_PRECISE_PATH_PID.atSetpoint());
+    // return true;
   }
 }
