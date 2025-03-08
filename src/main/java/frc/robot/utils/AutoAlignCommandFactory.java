@@ -20,7 +20,7 @@ import frc.robot.Constants.AlgaeGrabberSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.PathingConstants;
 import frc.robot.commands.DriveAtChassisSpeedsCommand;
-import frc.robot.commands.SlowFieldDriveCommand;
+import frc.robot.commands.FieldDriveCommand;
 import frc.robot.commands.AlgaeGrabberStates.EjectAlgaeCommand;
 import frc.robot.commands.AlgaeGrabberStates.PositionHoldAndEjectCommand;
 import frc.robot.commands.AlgaeGrabberStates.PositionHoldCommand;
@@ -329,7 +329,7 @@ public class AutoAlignCommandFactory {
 
         return driveAndIntake.andThen(new ParallelCommandGroup(
             new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, eject),
-            new SlowFieldDriveCommand(driveSubsystem, x, y, rot)
+            new FieldDriveCommand(driveSubsystem, x, y, rot)
         )).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, goalPose));
     }
 

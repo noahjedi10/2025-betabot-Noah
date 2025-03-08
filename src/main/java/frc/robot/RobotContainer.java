@@ -154,20 +154,18 @@ public class RobotContainer {
     Command highGrab = new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.HIGH_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION);
     Command lowGrab = new AlgaeGrabberAndElevatorPositionAndIntakeCommand(elevatorSubsystem, algaeGrabberSubsystem, ElevatorSubsystemConstants.LOW_ALGAE_POSITION, AlgaeGrabberSubsystemConstants.ALGAE_REMOVAL_ENCODER_POSITION);
 
-    highAlgae.onTrue(new SequentialCommandGroup(
-      highGrab,
+    highAlgae.onTrue(
       new ParallelCommandGroup(
-        new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, runOuttakeBooleanSupplier),
-        new SlowFieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX)
-      ))
+        new SequentialCommandGroup(highGrab, new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, runOuttakeBooleanSupplier)),
+        new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX)
+      )
     );
 
-    lowAlgae.onTrue(new SequentialCommandGroup(
-      lowGrab,
+    lowAlgae.onTrue(
       new ParallelCommandGroup(
-        new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, runOuttakeBooleanSupplier),
-        new SlowFieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX)
-      ))
+        new SequentialCommandGroup(lowGrab, new PositionHoldAndEjectCommand(algaeGrabberSubsystem, elevatorSubsystem, runOuttakeBooleanSupplier)),
+        new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX)
+      )
     );
 
     cancelAlgaeGrab.onTrue(homeElevatorAndDontBreakAlgaeGrabber);

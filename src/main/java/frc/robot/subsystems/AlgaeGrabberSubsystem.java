@@ -73,6 +73,10 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
     return thruBore.get();
   }
 
+  public double getLinearizedPosition() {
+    return linearizeEncoderOutput(getPosition());
+  }
+
   public double getSpinMotorCurrentDraw() {
     return spinMotor.getOutputCurrent();
   }

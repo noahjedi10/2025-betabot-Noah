@@ -27,7 +27,7 @@ public class PositionHoldCommand extends Command {
   @Override
   public void initialize() {
     this.currentElevatorPosition = elevatorSubsystem.getPosition();
-    this.currentAlgaeGrabberPosition = algaeGrabberSubsystem.getPosition();
+    this.currentAlgaeGrabberPosition = algaeGrabberSubsystem.getLinearizedPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

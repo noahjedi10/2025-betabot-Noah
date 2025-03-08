@@ -4,9 +4,6 @@
 
 package frc.robot.Constants;
 
-import java.util.Arrays;
-import java.util.List;
-
 /** Add your docs here. */
 public class ElevatorSubsystemConstants 
 {
@@ -20,7 +17,7 @@ public class ElevatorSubsystemConstants
 
     public static final double L1_ENCODER_POSITION = 0.0;
     public static final double L2_ENCODER_POSITION = 8.5;
-    public static final double L3_ENCODER_POSITION = 26.0;
+    public static final double L3_ENCODER_POSITION = 25.5;
     public static final double L4_ENCODER_POSITION = 52.0;
 
     public static final double HP_ENCODER_POSITION = 0.1;
@@ -33,19 +30,15 @@ public class ElevatorSubsystemConstants
 
     public static final double GRABBER_SPEED = 0.3;
     public static final double L1_GRABBER_SPEED = .15;
-    public static final double L4_GRABBER_SPEED = .34;
+    public static final double L4_GRABBER_SPEED = .30;
     ;
     public static final double INTAKE_GRABBER_SPEED = 0.2;
 
     public static final double HOMED_CURRENT_DRAW = 60.0;
 
-    public static final double MAX_ACCELERATION = 2500;
-    public static final double MAX_VELOCITY = 5000;
+    public static final double MAX_ACCELERATION = 3500;
+    public static final double MAX_VELOCITY = 15000;
     public static final double AT_SETPOINT_TOLERANCE = 1.0;
 
     public static final double ARBITRARY_FEEDFORWARD = 0.071;
-
-    public static final List<Double> ALGAE_ELEVATOR_POSITIONS = Arrays.asList(
-        
-    );
 }
