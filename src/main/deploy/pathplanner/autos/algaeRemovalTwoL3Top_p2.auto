@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "p2_artl3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HPIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "p3_artl3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoScoreL3Left"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

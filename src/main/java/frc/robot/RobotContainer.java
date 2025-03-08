@@ -30,6 +30,7 @@ import frc.robot.commands.AlgaeGrabberStates.UnsafeProcessorScoreCommand;
 import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.AlgaeGrabberAndElevatorPositionAndIntakeCommand;
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
+import frc.robot.commands.AutoAlign.AutoScoreCommandAuton;
 import frc.robot.commands.AutoAlign.AutoScoreL4Command;
 import frc.robot.commands.ElevatorStates.AutonomousElevatorCommands.ExtendToHeightThenScoreCommand;
 import frc.robot.commands.Failsafes.OperatorFailsafeCommand;
@@ -78,8 +79,8 @@ public class RobotContainer {
   }
 
   private void configureNamedCommands() {
-    NamedCommands.registerCommand("ScoreL4", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION).withTimeout(2));
-    NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(1.5));
+    NamedCommands.registerCommand("ScoreL4", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION).withTimeout(3));
+    NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(3));
     NamedCommands.registerCommand("ScoreL2", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION).withTimeout(1));
     NamedCommands.registerCommand("HPIntake", intakeCommand);
     NamedCommands.registerCommand("LowAlgae", new SequentialCommandGroup(
