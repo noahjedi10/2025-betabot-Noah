@@ -88,7 +88,7 @@ public class RobotContainer {
     configureElevatorBindings();
     configureAlgaeGrabberBindings();
     configureSideSelectorBindings();
-    configureAlgaeEjectOrRetainBindings();
+    // configureAlgaeEjectOrRetainBindings();
     congigureManualOverrideBindings();
   }
 
