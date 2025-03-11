@@ -30,11 +30,13 @@ import frc.robot.commands.AlgaeGrabberStates.AutonomousAlgaeGrabberCommands.Alga
 import frc.robot.commands.AutoAlign.AutoAlgaeCommand;
 import frc.robot.commands.AutoAlign.AutoScoreCommand;
 import frc.robot.commands.AutoAlign.AutoScoreL4Command;
+import frc.robot.commands.ClimbStates.ClimbGoToJoystickSpeedCommand;
 import frc.robot.commands.ElevatorStates.AutonomousElevatorCommands.ExtendToHeightThenScoreCommand;
 import frc.robot.commands.Failsafes.OperatorFailsafeCommand;
 import frc.robot.commands.LEDCommands.FullIndicateCommand;
 import frc.robot.commands.LEDCommands.IndicateSideCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -53,6 +55,7 @@ public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   AlgaeGrabberSubsystem algaeGrabberSubsystem = new AlgaeGrabberSubsystem();
   LEDSubsystem ledSubsystem = new LEDSubsystem();
+  ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 
   Command defaultDriveCommand = new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX);
   Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
@@ -97,6 +100,7 @@ public class RobotContainer {
     algaeGrabberSubsystem.setDefaultCommand(algaeGrabberDefaultCommand);
     elevatorSubsystem.setDefaultCommand(new ElevatorRetractCommand(elevatorSubsystem));
     ledSubsystem.setDefaultCommand(defaultLEDSubsystemCommand);
+    climbSubsystem.setDefaultCommand(new ClimbGoToJoystickSpeedCommand(climbSubsystem, operator::getRightY));
   }
 
   private void configureDriveBindings() {

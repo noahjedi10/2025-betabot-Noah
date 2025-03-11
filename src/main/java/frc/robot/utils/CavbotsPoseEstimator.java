@@ -14,7 +14,7 @@ public class CavbotsPoseEstimator {
 
     CavbotsPhotonCamera[] localizationCameras = {
         new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_ONE_NAME, CameraConstants.LOCALIZATION_CAM_ONE_OFFSET),
-        // new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_TWO_NAME, CameraConstants.LOCALIZATION_CAM_TWO_OFFSET)
+        new CavbotsPhotonCamera(CameraConstants.LOCALIZATION_CAM_TWO_NAME, CameraConstants.LOCALIZATION_CAM_TWO_OFFSET)
     };
 
     public CavbotsPoseEstimator(DriveSubsystem driveSubsystem, Pose2d initialPose2d) {

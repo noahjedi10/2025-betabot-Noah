@@ -54,8 +54,8 @@ public class PathingConstants {
     public static final double FIELD_HEIGHT_METERS = 8.05;
 
     //both are in botspace. decreasing Y moves the bot back, decreasing X moves it right.
-    public static final double X_OFFSET = 0.09;
-    public static final double Y_OFFSET = 0.0;
+    public static final double X_OFFSET = 0.07;
+    public static final double Y_OFFSET = 0.05;
 
     public static final double ALGAE_X_OFFSET = -0.2;
     public static final double ALGAE_Y_OFFSET = -1.0; //-.65

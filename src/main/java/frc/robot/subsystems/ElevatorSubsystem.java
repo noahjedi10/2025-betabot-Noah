@@ -88,7 +88,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setPosition(double position) {
     currentSetpoint = position;
-    onboardClosedLoop.setReference(-position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, -ElevatorSubsystemConstants.ARBITRARY_FEEDFORWARD, ArbFFUnits.kPercentOut);
+    onboardClosedLoop.setReference(-position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, -ElevatorSubsystemConstants.ARBITRARY_FEEDFORWARD, ArbFFUnits.kVoltage);
   }
 
   public void zeroEncoder() {
