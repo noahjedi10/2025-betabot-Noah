@@ -55,7 +55,7 @@ public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   AlgaeGrabberSubsystem algaeGrabberSubsystem = new AlgaeGrabberSubsystem();
   LEDSubsystem ledSubsystem = new LEDSubsystem();
-  ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+  // ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 
   Command defaultDriveCommand = new FieldDriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX);
   Command algaeGrabberDefaultCommand = new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION);
@@ -80,8 +80,8 @@ public class RobotContainer {
   }
 
   private void configureNamedCommands() {
-    NamedCommands.registerCommand("ScoreL4", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION).withTimeout(3));
-    NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(3));
+    NamedCommands.registerCommand("ScoreL4", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L4_ENCODER_POSITION).withTimeout(2.5));
+    NamedCommands.registerCommand("ScoreL3", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L3_ENCODER_POSITION).withTimeout(2));
     NamedCommands.registerCommand("ScoreL2", new ExtendToHeightThenScoreCommand(elevatorSubsystem, ElevatorSubsystemConstants.L2_ENCODER_POSITION).withTimeout(1));
     NamedCommands.registerCommand("HPIntake", intakeCommand);
   }
@@ -100,7 +100,7 @@ public class RobotContainer {
     algaeGrabberSubsystem.setDefaultCommand(algaeGrabberDefaultCommand);
     elevatorSubsystem.setDefaultCommand(new ElevatorRetractCommand(elevatorSubsystem));
     ledSubsystem.setDefaultCommand(defaultLEDSubsystemCommand);
-    climbSubsystem.setDefaultCommand(new ClimbGoToJoystickSpeedCommand(climbSubsystem, operator::getRightY));
+    // climbSubsystem.setDefaultCommand(new ClimbGoToJoystickSpeedCommand(climbSubsystem, operator::getRightY));
   }
 
   private void configureDriveBindings() {
