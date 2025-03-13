@@ -27,7 +27,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 5.0
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -52,6 +52,12 @@
           "type": "path",
           "data": {
             "pathName": "p3B"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
           }
         }
       ]
