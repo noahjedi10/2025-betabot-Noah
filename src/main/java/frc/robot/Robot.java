@@ -11,18 +11,20 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.utils.AutoAlignCommandFactory;
+import frc.robot.utils.AutonomousChooser;
 import frc.robot.utils.PathLoader;
 
 @SuppressWarnings("unused")
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  AutonomousChooser autoChooser;
 
   private final RobotContainer m_robotContainer;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    autoChooser = new AutonomousChooser();
     AutoAlignCommandFactory.initalize();
-    m_autonomousCommand = PathLoader.loadAuto("2l4Top");
   }
 
   @Override
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_autonomousCommand = autoChooser.getSelectedAuto();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
