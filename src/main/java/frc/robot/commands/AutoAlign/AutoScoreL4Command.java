@@ -53,7 +53,7 @@ public class AutoScoreL4Command extends Command {
   @Override
   public void end(boolean interrupted) {    
     System.out.println("Ran!");
-    Command alignmentCommand = AutoAlignCommandFactory.getL4AutoAlignCommand(
+    Command alignmentCommand = AutoAlignCommandFactory.getL4AutoAlignCommandParallel(
       driveSubsystem.getPoseEstimator().getPose2d(), 
       elevatorSubsystem,
       driveSubsystem,

@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.RobotConstants;
@@ -95,6 +96,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightEncoder.setPosition(0.0);
   }
 
+  public void zeroEncoder(double customZero) {
+    rightEncoder.setPosition(customZero);
+  }
+
   public void stopAll() {
     setSpin(0.0);
     setGrabber(0.0);    
@@ -115,7 +120,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("ElevatorPos",getPosition());
+    SmartDashboard.putNumber("ElevatorPos",getPosition());
     // SmartDashboard.putNumber("CurrentDrawElevator", getElevatorCurrentDraw());
     // SmartDashboard.putNumber("sensorProximity", coralSensor.getProximity());
   }

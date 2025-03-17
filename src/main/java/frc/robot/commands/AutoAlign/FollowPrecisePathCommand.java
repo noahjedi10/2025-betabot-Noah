@@ -29,7 +29,7 @@ public class FollowPrecisePathCommand extends Command {
 
     X_PRECISE_PATH_PID.setTolerance(.01);
     Y_PRECISE_PATH_PID.setTolerance(.01);
-    ROTATE_PRECISE_PATH_PID.setTolerance(.2);
+    ROTATE_PRECISE_PATH_PID.setTolerance(.1);
 
     ROTATE_PRECISE_PATH_PID.enableContinuousInput(0, Math.PI * 2);
 

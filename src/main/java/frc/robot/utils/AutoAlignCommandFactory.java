@@ -339,4 +339,11 @@ public class AutoAlignCommandFactory {
             new ExtendToHeightThenScoreCommand(elevatorSubsystem, elevatorEncoderPosition, grabberSpeed)
         ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
     }
+
+    public static Command getL4AutoAlignCommandParallel(Pose2d currentPosition, ElevatorSubsystem elevatorSubsystem, DriveSubsystem driveSubsystem, double elevatorEncoderPosition, boolean onRedAlliance, boolean onLeftSide, double grabberSpeed) {
+        return new ParallelCommandGroup(
+            getAutoAlignDriveCommandL4(driveSubsystem, currentPosition, onRedAlliance, onLeftSide),
+            new ExtendToHeightThenScoreCommand(elevatorSubsystem, elevatorEncoderPosition, grabberSpeed)
+        ).onlyIf(() -> isPoseSafeToDriveTo(currentPosition, getClosestPose(currentPosition, onRedAlliance, onLeftSide)));
+    }
 }

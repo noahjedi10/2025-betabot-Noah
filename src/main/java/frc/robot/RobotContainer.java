@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -42,6 +43,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.utils.PathLoader;
 import frc.robot.commands.ElevatorStates.ElevatorRetractCommand;
+import frc.robot.commands.ElevatorStates.ElevatorReturnToHomeAndZeroCommand;
 import frc.robot.commands.ElevatorStates.ElevatorHPIntakeCommand;
 import frc.robot.commands.ElevatorStates.ElevatorGoToPositionCommand;
 import frc.robot.commands.SlowFieldDriveCommand;
@@ -66,6 +68,12 @@ public class RobotContainer {
   Command homeElevatorAndDontBreakAlgaeGrabber = new SequentialCommandGroup(
     new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION),
     new ElevatorRetractCommand(elevatorSubsystem).alongWith(new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION))
+  );
+
+  Command safeCurrentHomeCommand = new SequentialCommandGroup(
+    // new ElevatorPopUpAndAlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, elevatorSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION),
+    new ElevatorReturnToHomeAndZeroCommand(elevatorSubsystem)
+    // new ElevatorRetractCommand(elevatorSubsystem).alongWith(new AlgaeGrabberGoToPositionCommand(algaeGrabberSubsystem, AlgaeGrabberSubsystemConstants.RETRACTED_ENCODER_POSITION))
   );
 
   boolean scoringOnLeft = true;
@@ -225,6 +233,7 @@ public class RobotContainer {
   private void congigureManualOverrideBindings() {
     JoystickButton manualOverrideOn = new JoystickButton(operator, 8);
     JoystickButton manualOverrideOff = new JoystickButton(operator, 7);
+    JoystickButton currentHomeElevator = new JoystickButton(operator, 4);
 
     JoystickButton failsafeButton = new JoystickButton(operator, 1);
 
@@ -247,6 +256,8 @@ public class RobotContainer {
     ).raceWith(
       new FullIndicateCommand(ledSubsystem, LEDSubsystemConstants.OPERATOR_FINAL_FAILSAFE_ON)
     ));
+
+    currentHomeElevator.onTrue(safeCurrentHomeCommand);
   }
 
   public boolean getScoringOnLeft() {
