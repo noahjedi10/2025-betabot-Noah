@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -17,11 +16,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.utils.CavbotsLaserCAN;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -30,7 +29,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   SparkMax secondary = new SparkMax(ElevatorSubsystemConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
   SparkMax spinGrabber = new SparkMax(ElevatorSubsystemConstants.GRABBER_MOTOR_ID, MotorType.kBrushless);
   
-  ColorSensorV3 coralSensor = new ColorSensorV3(Port.kOnboard);
+  CavbotsLaserCAN coralSensor = new CavbotsLaserCAN(ElevatorSubsystemConstants.CORAL_SENSOR_ID);
 
   RelativeEncoder rightEncoder = primary.getEncoder();
 
@@ -106,7 +105,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean getIsCoralInHoldingPosition() {
-    return coralSensor.getProximity() > ElevatorSubsystemConstants.CORAL_SENSOR_PROXIMITY_THRESHOLD;
+    return coralSensor.getProximity() < ElevatorSubsystemConstants.CORAL_SENSOR_PROXIMITY_THRESHOLD;
   }
 
   public boolean isElevatorPIDAtSetpoint() {
@@ -122,6 +121,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     // // This method will be called once per scheduler run
     SmartDashboard.putNumber("ElevatorPos",getPosition());
     // SmartDashboard.putNumber("CurrentDrawElevator", getElevatorCurrentDraw());
-    // SmartDashboard.putNumber("sensorProximity", coralSensor.getProximity());
+    SmartDashboard.putNumber("sensorProximity", coralSensor.getProximity());
   }
 }
