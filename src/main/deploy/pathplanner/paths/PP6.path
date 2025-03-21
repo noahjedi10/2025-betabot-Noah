@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.780020491803279,
-        "y": 6.140829918032787
+        "x": 1.282684426229508,
+        "y": 7.567366803278689
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.221618852459016,
-        "y": 6.11685450819672
+        "x": 1.906720329120694,
+        "y": 5.713697921127406
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "bruh2"
     },
     {
       "anchor": {
-        "x": 5.142725409836065,
-        "y": 5.133862704918033
+        "x": 3.800102459016393,
+        "y": 5.181813524590163
       },
       "prevControl": {
-        "x": 5.46639344262295,
-        "y": 5.397592213114753
+        "x": 3.7166004160932626,
+        "y": 5.45556249878498
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "bruh"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4776119402985061,
-      "rotationDegrees": -119.99999999999999
+      "waypointRelativePos": 0.8614072494669526,
+      "rotationDegrees": -56.04371067719764
     }
   ],
   "constraintZones": [],
@@ -46,14 +46,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -121.37300514010838
+    "velocity": 0,
+    "rotation": -56.5091486933292
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3 Cycle",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 128.06565109873048
   },
   "useDefaultConstraints": true
 }
