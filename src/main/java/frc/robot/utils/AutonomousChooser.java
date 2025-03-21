@@ -20,7 +20,7 @@ public class AutonomousChooser {
     };
     
     public AutonomousChooser() {
-        chooser.setDefaultOption(validPaths[0], PathLoader.loadAuto(validPaths[0]));
+        chooser.setDefaultOption(validPaths[2], PathLoader.loadAuto(validPaths[2]));
         initChooser();
         SmartDashboard.putData("AutoSelector", chooser);
     }
